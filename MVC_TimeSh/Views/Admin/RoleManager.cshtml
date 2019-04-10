@@ -1,0 +1,208 @@
+﻿@using MVC_TimeSh.Models
+@model IEnumerable<MVC_TimeSh.Models.UserRolesMenuModel>
+
+@{
+    ViewBag.Title = "Admin Role Manager";
+    List<UserRolesMenuModel> userRoles = ViewBag.UserNrole as List<UserRolesMenuModel>;
+}
+
+<div class="jumbotron text-center">
+    <h2><strong>Admin Role Manager</strong></h2>
+    <h3>Welcome Administrator.</h3>
+    <h5>You can edit user roles.</h5>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Success: </strong> @TempData["Success"]
+    </div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Error: </strong> @TempData["Error"]
+    </div>
+}
+
+<!-- Column 1 -->
+<div class="row col-sm-12 col-md-12 col-lg-12">
+    <div class="col-sm-5 col-md-5 col-lg-5">
+        <div class="panel panel-primary">
+            <div class="panel-heading text-center">
+                <h4>Available Roles</h4>
+            </div>
+            <div class="panel-body text-center">
+                <table class="table table-striped table-bordered
+                              table-hover col-sm-5 col-md-5 col-lg-5">
+                    @foreach (var role in ViewBag.Roles)
+                    {
+                        <thead>
+                            <tr>
+                                <td>
+                                    <strong>@role.Text</strong>
+                                </td>
+                            </tr>
+                        </thead>
+                    }
+                </table>
+            </div>
+        </div>
+
+        <div class="panel panel-primary">
+            <div class="panel-heading text-center">
+                <h4>Get Role for Selected User</h4>
+            </div>
+            @using (Html.BeginForm("GetUserRole", "Admin"))
+            {
+                @Html.AntiForgeryToken()
+                <div class="panel-body">
+                    <div class="input-group">
+                        <span class="input-group-addon">User Name</span>
+                        <span class="input-group-addon">
+                            <i class="glyphicon glyphicon-user"></i>
+                        </span>
+                        @Html.DropDownList("username",
+                        (IEnumerable<SelectListItem>)
+                         ViewBag.NotSuper, "Choose ...",
+                         new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="panel-footer text-center">
+                    <input type="submit" value="Get User Role"
+                           class="btn btn-info" />
+                </div>
+            }
+            @if (ViewBag.RolesForUser != null)
+            {
+                <div class="alert alert-info text-center">
+                    <strong>Role for User</strong>
+                    <ol style="list-style: decimal inside;">
+                        @foreach (var str in ViewBag.RolesForUser)
+                        {
+                            <li>@str</li>
+                        }
+                    </ol>
+                </div>
+            }
+        </div>
+
+        <div class="panel panel-primary">
+            <div class="panel-heading text-center">
+                <h4>Change Selected User Role</h4>
+            </div>            
+            @using (Html.BeginForm("ChangeUserRole", "Admin"))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true)
+                <div class="panel-body">
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="glyphicon glyphicon-user"></i>
+                        </span>
+                        @Html.DropDownList("username",
+                        (IEnumerable<SelectListItem>)
+                         ViewBag.NotSuper, "Select Username.",
+                         new { @class = "form-control" })
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="glyphicon glyphicon-edit"></i>
+                        </span>
+                        @Html.DropDownList("role",
+                        (IEnumerable<SelectListItem>)
+                         ViewBag.AdminChangeRoles, "Select Role Name.",
+                         new { @class = "form-control" })
+                    </div>                       
+                </div>
+                <div class="panel-footer text-center">
+                    <input type="submit" value="Switch Role" class="btn btn-primary" />
+                </div>
+            }
+        </div>
+
+        <div class="panel panel-primary">
+            <div class="panel-heading text-center">
+                <h4>Assign User Roles</h4>
+            </div>
+            <div class="panel-body text-center">
+                @Html.ActionLink("Assign Roles", "Dashboard", "Admin",
+                                  null, new { @class = "btn btn-info" })
+            </div>
+        </div>
+    </div>
+
+    <!-- Column 2 -->
+    <div class="col-sm-7 col-md-7 col-lg-7">
+        <div class="panel panel-primary">
+            <div class="panel-heading text-center">
+                <h4>Users with Role</h4>
+            </div>
+            <div class="panel-body ">
+                <table class="table table-striped table-bordered
+                              table-hover col-sm-7 col-md-7 col-lg-7">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(m => m.IdShortened)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(m => m.Username)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(m => m.Name)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(m => m.Role)
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null)
+                        {
+                            foreach (var user in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(u => user.IdShortened)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(u => user.Username)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(u => user.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(u => user.Role)
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            foreach (var user in userRoles)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(u => user.IdShortened)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(u => user.Username)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(u => user.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(u => user.Role)
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

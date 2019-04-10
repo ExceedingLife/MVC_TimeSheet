@@ -22,3 +22,39 @@ select,
 textarea {
     max-width: 280px;
 }
+
+.glyphicon-huge {
+    font-size: 22em;
+}
+
+.panel-blue {
+    background-color: darkblue;
+    color: white;
+}
+.panel-lightblue {
+    background-color: dodgerblue;
+    color: white;
+}
+.panel-red {
+    background-color: red;
+    color: white;
+}
+.panel-green {
+    background-color: green;
+    color:white;
+}
+.panel-yellow {
+    background-color: yellow;
+    color: white;
+}
+.panel-gold {
+    background-color: gold;
+    color: white;
+}
+.panel-dimgray {
+    background-color: dimgray;
+    color: white;
+}
+.ddl2Center {
+    text-align:center;
+}

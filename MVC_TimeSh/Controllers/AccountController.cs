@@ -17,15 +17,18 @@ namespace MVC_TimeSh.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        private ApplicationDbContext context;
 
         public AccountController()
         {
+            context = new ApplicationDbContext();
         }
 
         public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
         {
             UserManager = userManager;
             SignInManager = signInManager;
+            context = new ApplicationDbContext();
         }
 
         public ApplicationSignInManager SignInManager
@@ -75,7 +78,9 @@ namespace MVC_TimeSh.Controllers
 
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true
-            var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
+            var result = await SignInManager.PasswordSignInAsync(
+                model.UserName, model.Password, model.RememberMe, 
+                shouldLockout: false);
             switch (result)
             {
                 case SignInStatus.Success:
@@ -83,7 +88,8 @@ namespace MVC_TimeSh.Controllers
                 case SignInStatus.LockedOut:
                     return View("Lockout");
                 case SignInStatus.RequiresVerification:
-                    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
+                    return RedirectToAction("SendCode", new {
+                        ReturnUrl = returnUrl, RememberMe = model.RememberMe });
                 case SignInStatus.Failure:
                 default:
                     ModelState.AddModelError("", "Invalid login attempt.");
@@ -139,7 +145,13 @@ namespace MVC_TimeSh.Controllers
         [AllowAnonymous]
         public ActionResult Register()
         {
-            return View();
+            var model = new RegisterViewModel();
+            model.Birthday = DateTime.Today.AddYears(-125);
+
+            ViewBag.Roles = new SelectList(context.Roles.Where(u =>
+            !u.Name.Contains("SuperAdmin")).ToList(), "Name", "Name");
+
+            return View(model);
         }
 
         //
@@ -151,20 +163,34 @@ namespace MVC_TimeSh.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new ApplicationUser
+                {
+                    UserName = model.UserName,
+                    Email = model.Email,
+                    Name = model.Name,
+                    PhoneNumber = model.PhoneNumber,
+                    Birthday = Convert.ToDateTime(model.Birthday),
+                    DateCreated = DateTime.Now,
+                };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
                     await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                    
+
                     // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
                     // Send an email with this link
                     // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
                     // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                     // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
 
+                    // Assign Roles to User HERE
+                    await this.UserManager.AddToRoleAsync(user.Id, model.UserRoles);
+                    TempData["Success"] = "User Created Successfully";
+
                     return RedirectToAction("Index", "Home");
                 }
+                ViewBag.Roles = new SelectList(context.Roles.Where(u =>
+                !u.Name.Contains("SuperAdmin")).ToList(), "Name", "Name");
                 AddErrors(result);
             }
 

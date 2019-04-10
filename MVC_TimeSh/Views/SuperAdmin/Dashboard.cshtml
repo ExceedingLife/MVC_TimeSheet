@@ -1,0 +1,164 @@
+﻿
+@{
+    ViewBag.Title = "Administrator Menu";
+}
+
+<div class="jumbotron">
+    <h2>Super Administrator Dashboard</h2>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success my-2">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Success: </strong> @TempData["Success"]
+    </div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger my-2">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Error: </strong> @TempData["Error"]
+    </div>
+}
+
+<!-- USER COUNT SECTION -->
+    <div class="row">
+        <!--    ROW SECTION 1   -->
+        <div class="col-lg-3 col-md-6">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <span class="glyphicon glyphicon-comment" style="font-size: 7em;"></span>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <h1>@ViewBag.UsersCount</h1>
+                            <h3>User Count</h3>
+                        </div>
+                    </div>
+                </div>
+                <a href="@Url.Action("GetAllUsers", "SuperAdmin")">
+                    <div class="panel-footer">
+                        <span class="pull-left">Edit | Delete Users</span>
+                        <span class="pull-right glyphicon glyphicon-circle-arrow-right"></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </a>
+            </div>
+            <br />
+            <div class="panel panel-blue">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <span class="glyphicon glyphicon-book" style="font-size: 7em;"></span>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <h1>@ViewBag.RolesCount</h1>
+                            <h3>User Roles</h3>
+                        </div>
+                    </div>
+                </div>
+                <a href="@Url.Action("RoleManager", "SuperAdmin")">
+                    <div class="panel-footer">
+                        <span class="pull-left">Role Manager</span>
+                        <span class="pull-right glyphicon glyphicon-circle-arrow-right"></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <!-- ADMIN COUNT SECTION-->
+        <!--    ROW SECTION 2   -->
+        <div class="col-lg-3 col-md-6">
+            <div class="panel panel-green">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <span class="glyphicon glyphicon-tasks" style="font-size: 7em;"></span>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <h1>@ViewBag.AdminCount</h1>
+                            <h3>Admin Count</h3>
+                        </div>
+                    </div>
+                </div>
+                <a href="@Url.Action("ViewAdmins", "SuperAdmin")">
+                    <div class="panel-footer">
+                        <span class="pull-left">View Details</span>
+                        <span class="pull-right glyphicon glyphicon-circle-arrow-right"></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </a>
+            </div>
+            <br />
+            <div class="panel panel-red">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <span class="glyphicon glyphicon-cog" style="font-size: 7em;"></span>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <h1>Edit </h1>
+                            <h3>Account Details</h3>
+                        </div>
+                    </div>
+                </div>
+                <a href="@Url.Action("EditSuperAdmin", "SuperAdmin", new { id = ViewBag.CurrentId })">
+                    <div class="panel-footer">
+                        <span class="pull-left">Account Manager</span>
+                        <span class="pull-right glyphicon glyphicon-circle-arrow-right"></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <!-- Project Count + Password      -->
+        <!-- ROW SECTION 3-->
+        <div class="col-lg-3 col-md-6">
+            <div class="panel panel-gold">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <span class="glyphicon glyphicon-shopping-cart" style="font-size: 7em;"></span>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <h1>0 @ViewBag.ProjectCount</h1>
+                            <h3>Project Count</h3>
+                        </div>
+                    </div>
+                </div>
+                <a href="#">
+                    <div class="panel-footer">
+                        <span class="pull-left">View Details</span>
+                        <span class="pull-right glyphicon glyphicon-circle-arrow-right"></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </a>
+            </div>
+            <br />
+            <div class="panel panel-dimgray">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <span class="glyphicon glyphicon-lock" style="font-size: 7em;"></span>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <h3>Update Password</h3>
+                            <h4>Account Details</h4>
+                        </div>
+                    </div>
+                </div>
+                <a href="@Url.Action("ChangePassword", "SuperAdmin", new { id = ViewBag.CurrentId })">
+                    <div class="panel-footer">
+                        <span class="pull-left">Update Account Password</span>
+                        <span class="pull-right glyphicon glyphicon-circle-arrow-right"></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+

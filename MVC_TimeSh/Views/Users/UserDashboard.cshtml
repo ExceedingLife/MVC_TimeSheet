@@ -1,0 +1,223 @@
+﻿@{
+    ViewBag.Title = "User Dashboard";
+
+    if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success my-2">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>Success: </strong> @TempData["Success"]
+        </div>
+    }
+    if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger my-2">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>Error: </strong> @TempData["Error"]
+        </div>
+    }
+}
+
+<div class="jumbotron text-center">
+    <h1>User Dashboard</h1>
+    <h5>Welcome to your User panel.</h5>
+</div>
+
+<!-- USER COUNT SECTION -->
+<div class="row">
+    <!--    ROW 1 SECTION 1   -->
+    <div class="col-lg-3 col-md-6">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <span class="glyphicon glyphicon-time" style="font-size: 7em;"></span>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <h1>@ViewBag.UsersCount</h1>
+                        <h3>Timesheet</h3>
+                        <h4>Submitted Count</h4>
+                    </div>
+                </div>
+            </div>
+            <a href="@Url.Action("UsersTable", "Users")">
+                <div class="panel-footer">
+                    <span class="pull-left">View Details</span>
+                    <span class="pull-right glyphicon glyphicon-circle-arrow-right"></span>
+                    <div class="clearfix"></div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <!--    ROW 1 SECTION 2   -->
+    <div class="col-lg-3 col-md-6">
+        <div class="panel panel-green">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <span class="glyphicon glyphicon-time" style="font-size: 7em;"></span>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <h1>@ViewBag.UsersCount</h1>
+                        <h3>Timesheet</h3>
+                        <h4>Approved Count</h4>
+                    </div>
+                </div>
+            </div>
+            <a href="@Url.Action("UsersTable", "Users")">
+                <div class="panel-footer">
+                    <span class="pull-left">View Details</span>
+                    <span class="pull-right glyphicon glyphicon-circle-arrow-right"></span>
+                    <div class="clearfix"></div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <!--    ROW 1 SECTION 3   -->
+    <div class="col-lg-3 col-md-6">
+        <div class="panel panel-red">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <span class="glyphicon glyphicon-time" style="font-size: 7em;"></span>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <h1>@ViewBag.UsersCount</h1>
+                        <h3>Timesheet</h3>
+                        <h4>Rejected Count</h4>
+                    </div>
+                </div>
+            </div>
+            <a href="@Url.Action("UsersTable", "Users")">
+                <div class="panel-footer">
+                    <span class="pull-left">View Details</span>
+                    <span class="pull-right glyphicon glyphicon-circle-arrow-right"></span>
+                    <div class="clearfix"></div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+<br />
+<div class="row">
+    <!--    ROW 2 SECTION 1   -->
+    <div class="col-lg-3 col-md-6">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <span class="glyphicon glyphicon-briefcase" style="font-size: 7em;"></span>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <h1>@ViewBag.UsersCount</h1>
+                        <h3>Expense</h3>
+                        <h4>Submitted Count</h4>
+                    </div>
+                </div>
+            </div>
+            <a href="@Url.Action("UsersTable", "Users")">
+                <div class="panel-footer">
+                    <span class="pull-left">View Details</span>
+                    <span class="pull-right glyphicon glyphicon-circle-arrow-right"></span>
+                    <div class="clearfix"></div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <!--    ROW 2 SECTION 2   -->
+    <div class="col-lg-3 col-md-6">
+        <div class="panel panel-green">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <span class="glyphicon glyphicon-briefcase" style="font-size: 7em;"></span>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <h1>@ViewBag.UsersCount</h1>
+                        <h3>Expense</h3>
+                        <h4>Approved Count</h4>
+                    </div>
+                </div>
+            </div>
+            <a href="@Url.Action("UsersTable", "Users")">
+                <div class="panel-footer">
+                    <span class="pull-left">View Details</span>
+                    <span class="pull-right glyphicon glyphicon-circle-arrow-right"></span>
+                    <div class="clearfix"></div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <!--    ROW 2 SECTION 3   -->
+    <div class="col-lg-3 col-md-6">
+        <div class="panel panel-red">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <span class="glyphicon glyphicon-briefcase" style="font-size: 7em;"></span>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <h1>@ViewBag.UsersCount</h1>
+                        <h3>Expense</h3>
+                        <h4>Rejected Count</h4>
+                    </div>
+                </div>
+            </div>
+            <a href="@Url.Action("UsersTable", "Users")">
+                <div class="panel-footer">
+                    <span class="pull-left">View Details</span>
+                    <span class="pull-right glyphicon glyphicon-circle-arrow-right"></span>
+                    <div class="clearfix"></div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+<br />
+<div class="row">
+    <!--    ROW 3 SECTION 1     -->
+    <div class="col-lg-3 col-md-6">
+        <div class="panel panel-gold">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <span class="glyphicon glyphicon-cog" style="font-size: 7em;"></span>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <h1>Edit </h1>
+                        <h4>Account Details</h4>
+                    </div>
+                </div>
+            </div>
+            <a href="@Url.Action("EditUser", "Users", new { id = ViewBag.CurrentId })">
+                <div class="panel-footer">
+                    <span class="pull-left">Account Manager</span>
+                    <span class="pull-right glyphicon glyphicon-circle-arrow-right"></span>
+                    <div class="clearfix"></div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <!--    ROW 3 SECTION 2   -->
+    <div class="col-lg-3 col-md-6">
+        <div class="panel panel-blue">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <span class="glyphicon glyphicon-lock" style="font-size: 7em;"></span>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <h3>Update Password</h3>
+                        <h4>Account Details</h4>
+                    </div>
+                </div>
+            </div>
+            <a href="@Url.Action("ChangePassword", "Admin", new { id = ViewBag.CurrentId })">
+                <div class="panel-footer">
+                    <span class="pull-left">Update Account Password</span>
+                    <span class="pull-right glyphicon glyphicon-circle-arrow-right"></span>
+                    <div class="clearfix"></div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>

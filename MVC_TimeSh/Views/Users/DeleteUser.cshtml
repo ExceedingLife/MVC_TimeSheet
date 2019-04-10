@@ -1,0 +1,100 @@
+﻿@model MVC_TimeSh.Models.UpdateUserViewModel
+@{ 
+    ViewBag.Title = "Delete Account";
+}
+
+<h3>Are you sure you want to delete your account?</h3>
+<div>
+    <h4>Delete Confirmation</h4>
+    <hr />
+
+    <dl class="dl-horizontal">
+
+        @*@Html.HiddenFor(u => u.UserId)*@
+        <dt>
+            @Html.DisplayNameFor(model => model.UserId)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.UserId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IdShortened)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IdShortened)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.UserName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UserName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PhoneNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PhoneNumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Birthday)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Birthday)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DateCreated)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DateCreated)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.UserRoles)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UserRoles)
+        </dd>
+
+    </dl>
+    @* "DeleteUser", "Users", FormMethod.Post, Model *@
+    @using (Html.BeginForm("DeleteUser", "Users", 
+            Model, FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-danger"
+                   onclick="return confirm('Confirmation of Delete Account?');" /> |
+
+            @Html.ActionLink("User Dashboard", "UserDashboard", "Users",
+             null, new { @class = "btn btn-primary" } )
+        </div>
+    }
+</div>

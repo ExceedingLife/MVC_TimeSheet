@@ -1,0 +1,138 @@
+﻿@model MVC_TimeSh.Models.AssignRolesModel
+
+@{ 
+    ViewBag.Title = "Assign Administrator";
+}
+
+<div class="jumbotron">
+    <h2>Assign Roles</h2>
+    <p>Add or Remove Administrators in which you 
+    seem fit <strong>SuperAdmin</strong></p>
+</div>
+
+@using (Html.BeginForm())
+{
+    <div class="panel panel-default">
+        <div class="panel-heading">Choose Administrator</div>
+
+        <div class="panel-body">
+            @if (TempData["Success"] != null)
+            {
+                <div class="alert alert-success">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <strong>Success: </strong> @TempData["Success"]
+                </div>
+            }
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-danger">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <strong>Error: </strong> @TempData["Error"]
+                </div>
+            }
+            @if (TempData["SuccessRole"] != null)
+            {
+                <div class="alert alert-warning">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <strong>Success: </strong> @TempData["SuccessRole"]
+                </div>
+            }
+            @if (TempData["ErrorRole"] != null)
+            {
+                <div class="alert alert-danger">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <strong>Error: </strong> @TempData["ErrorRole"]
+                </div>
+            }
+            @Html.AntiForgeryToken()
+
+            <div class="row">
+                <div class="col-md-4">
+                    @Html.DropDownListFor(a => a.UserId,
+                     new SelectList(Model.lstAdmins, "UserId", "Username"),
+                     new { @class = "form-control", @id = "userAdmins" })
+                    @* , @onChange = "SelectedValue(this)"*@
+                    @Html.HiddenFor(a => a.UserId)
+                    @Html.ValidationMessageFor(a => a.UserId)
+                </div>
+                <div class="col-md-4"></div>
+                <div class="col-md-4"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Choose User to Assign | Remove Administrator Role
+        </div>
+        <div class="panel-body">
+            <div class="clearfix"></div>
+
+            <div class="row">
+                @for(var i = 0; i < Model.lstUsers.Count(); i++)
+                {
+                    <div class="col-md-4">
+                        <div>
+                            @Html.CheckBoxFor(u => Model.lstUsers[i].SelectedUsers)
+                            <label>
+                                @Html.DisplayFor(u => Model.lstUsers[i].Username)
+                                @Html.HiddenFor(u => Model.lstUsers[i].UserId)
+                                @Html.HiddenFor(u => Model.lstUsers[i].Name)
+                            </label>
+                        </div>
+                    </div>
+                }
+            </div>
+            <br />
+            <div class="row">
+                <div class="form-group">
+                    <div class="col-md-offset-0 col-md-12">
+                        <input type="submit" value="Assign Role" class="btn btn-success" />
+                        @* @Url.Action("RemoveAdmin", "SuperAdmin") *@
+
+                        <button type="button" onclick="clickMe()"
+                                class="btn btn-danger">
+                            Remove Role
+                        </button>
+
+                        @Html.ActionLink("Cancel", "Dashboard", "SuperAdmin",
+                         null, new { @class = "btn btn-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<script type="text/javascript">
+    //$(function () {
+
+    function clickMe() {
+        var userid = $("#userAdmins").val();
+        if (userid != "") {
+            $.ajax({
+                url: "RemoveAdmin/SuperAdmin",
+                data: {
+                    userid: userid
+                },
+                type: "POST",
+                success: function (result) {
+                    window.location.assign(result);
+                }
+                //error: function () {
+                //    alert("Error");
+                //}
+            });
+        }
+        //window.location.href =
+            //'Url.Action("RemoveAdmin", "SuperAdmin")/' + userid;
+        //alert("val" + selectedValue);
+    }
+        function SelectedValue(ddlObject) {
+            // Value of ddl // Text of ddl
+            var selectedValue = ddlObject.value;           
+            var selectedText = ddlObject.options[ddlObject.selectedIndex].innerHTML;
+            alert("Selected Value: " + selectedValue + " - Selected Text: " + selectedText);
+        }
+    //})
+</script>
