@@ -12,7 +12,7 @@ namespace MVC_TimeSh.Migrations
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = false;
+            AutomaticMigrationsEnabled = true;
         }
 
         protected override void Seed(MVC_TimeSh.Models.ApplicationDbContext context)

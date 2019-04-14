@@ -38,6 +38,8 @@ namespace MVC_TimeSh.Controllers
             var adminCount = AdminList().Count();
             ViewBag.AdminCount = adminCount;
 
+            var projCount = context.Projects.Count();
+            ViewBag.ProjectCount = projCount;
             return View();
         }
 
@@ -167,7 +169,7 @@ namespace MVC_TimeSh.Controllers
                 user.Birthday = model.Birthday;
                 user.DateCreated = Convert.ToDateTime(model.DateCreated);
                 string role = "";
-                role = TempData["EditRole"].ToString();
+                role = TempData["EditRole"].ToString();                
                 //role = ViewBag.RoleEdit;
                 //string role = ViewBag.RoleEdit ?? "";
                 manager.RemoveFromRole(user.Id, role);
@@ -277,7 +279,7 @@ namespace MVC_TimeSh.Controllers
                                     Role = r.Name
                                 }).ToList();
             //ViewBag.UserRoles = userWithRole;
-
+            
             return View(userWithRole);
         }
 
@@ -325,6 +327,8 @@ namespace MVC_TimeSh.Controllers
             AssignRolesModel model = new AssignRolesModel();
             model.lstAdmins = AdminList();
             model.lstUsers = UserList();
+            UsersSelectList();
+            RolesSelectList();
 
             return View(model);
         }
@@ -400,14 +404,77 @@ namespace MVC_TimeSh.Controllers
             
             manager.RemoveFromRole(au.Id, "Admin");
             manager.AddToRole(au.Id, "User");
+
+            //AssignRolesModel model = new AssignRolesModel();
+            //model.lstAdmins = AdminList();
+            //model.lstUsers = UserList();
+            //UsersSelectList();
+            //RolesSelectList();
+
             if (Request.IsAjaxRequest())
             {
                 TempData["SuccessRole"] = "Role Removed Successfully";
                 Json(Url.Action("AssignAdmin"));
                 return RedirectToAction("AssignAdmin", "SuperAdmin");
             }
-            
+
             //TempData["Success"] = "Roles Assigned Successfully";
+            return RedirectToAction("AssignAdmin");
+           // return View("AssignAdmin", model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult GetSelectedUserRole(string username)
+        {
+            AssignRolesModel rolesModel = new AssignRolesModel
+            {
+                lstAdmins = AdminList(),
+                lstUsers = UserList()
+            };
+
+            if (!string.IsNullOrWhiteSpace(username))
+            {
+                var store = new UserStore<ApplicationUser>(context);
+                var manager = new UserManager<ApplicationUser>(store);
+                var user = manager.FindByName(username);
+                var role = manager.GetRoles(user.Id).FirstOrDefault();
+                if(role != null)
+                {
+                    ViewBag.Roles4User = role;
+                    TempData["Success"] = "Roles Retrieved Successfully";
+                    return View("AssignAdmin", rolesModel);
+                }
+                TempData["Error"] = "Role Retrieval Unsuccessful";
+                return View("AssignAdmin", rolesModel);
+            }
+            else
+            {
+                TempData["Error"] = "Role Retrieval Unsuccessful";
+                return View("AssignAdmin", rolesModel);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ChangeSelectedUserRole(string username, string role)
+        {
+            //AssignRolesModel rolesModel;
+            if (!string.IsNullOrWhiteSpace(username) && !string.IsNullOrWhiteSpace(role))
+            {
+                var store = new UserStore<ApplicationUser>(context);
+                var manager = new UserManager<ApplicationUser>(store);
+                var user = manager.FindByName(username);
+                var currentRole = manager.GetRoles(user.Id);
+                manager.RemoveFromRole(user.Id, currentRole.FirstOrDefault());
+                var result = manager.AddToRole(user.Id, role);
+                if (result.Succeeded)
+                {
+                    TempData["Success"] = "Role Successfully Changed.";
+                    return RedirectToAction("AssignAdmin");
+                }
+            }
+            TempData["Error"] = "Role Change Unsuccessful!";
             return RedirectToAction("AssignAdmin");
         }
 
@@ -468,6 +535,28 @@ namespace MVC_TimeSh.Controllers
             return View(lstAdmins);
         }
 
+        public void UsersSelectList()
+        {
+            var usersList = (from users in context.Users
+                             select new SelectListItem()
+                             {
+                                 Value = users.UserName.ToString(),
+                                 Text = users.UserName
+                             }).ToList();
+            ViewBag.SelectUsers = usersList;
+        }
+
+        public void RolesSelectList()
+        {
+            var rolesList = (from roles in context.Roles
+                             select new SelectListItem()
+                             {
+                                 Value = roles.Name.ToString(),
+                                 Text = roles.Name
+                             }).ToList();
+            ViewBag.SelectRoles = rolesList;
+        }
+
         public ActionResult ChangePassword()
         {
             var user = User.Identity.GetUserName();
@@ -523,5 +612,80 @@ namespace MVC_TimeSh.Controllers
                 return RedirectToAction("Dashboard", "SuperAdmin");
             }
         }
+
+        public ActionResult ViewProjects()
+        {
+            var projectList = (from projects in context.Projects
+                               select new
+                               {
+                                   Id = projects.ProjectId,
+                                   Name = projects.ProjectName,
+                                   Code = projects.ProjectCode,
+                                   Industry = projects.NatureOfIndustry
+                               }).ToList().Select(proj => new Project()
+                               {
+                                   ProjectId = proj.Id,
+                                   ProjectName = proj.Name,
+                                   ProjectCode = proj.Code,
+                                   NatureOfIndustry = proj.Industry
+                               });
+            if (projectList == null)
+                return HttpNotFound();
+
+            return View(projectList);
+        }
+
+
+        //public ActionResult EditProject(int id)
+        //{
+        //    if (id < 0)
+        //    {
+        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //    }
+        //    var project = context.Projects.Where(p =>
+        //        p.ProjectId.Equals(id)).FirstOrDefault();
+        //    if (project == null)
+        //    {
+        //        return HttpNotFound();
+        //    }
+        //    return View("~/Views/Projects/EditProject.cshtml",new ProjectUpdateModel()
+        //    {
+        //        ProjectId = project.ProjectId,
+        //        ProjectName = project.ProjectName,
+        //        ProjectCode = project.ProjectCode,
+        //        NatureOfIndustry = project.NatureOfIndustry
+        //    });
+        //}
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult EditProject([Bind]ProjectUpdateModel model)
+        //{
+        //    if (model == null)
+        //    {
+        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //    }
+        //    if (ModelState.IsValid)
+        //    {
+        //        var project = context.Projects.Where(id => id.ProjectId
+        //        .Equals(model.ProjectId)).FirstOrDefault();
+        //        project.ProjectName = model.ProjectName;
+        //        project.ProjectCode = model.ProjectCode;
+        //        project.NatureOfIndustry = model.NatureOfIndustry;
+        //        try
+        //        {
+        //            context.Entry(project).State = EntityState.Modified;
+        //            context.SaveChanges();
+        //            TempData["Success"] = "Project Updated Successfully";
+        //            return RedirectToAction("ViewProjects");
+        //        }
+        //        catch(Exception ex)
+        //        {
+        //            TempData["Error"] = "Project Update Error";
+        //            return RedirectToAction("ViewProjects");
+        //        }
+        //    }
+        //    TempData["Error"] = "Project Update Error";
+        //    return RedirectToAction("ViewProjects");
+        //}
     }
 }

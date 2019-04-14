@@ -1,0 +1,88 @@
+﻿@model IEnumerable<MVC_TimeSh.Models.Project>
+@{
+    ViewBag.Title = "All Projects";
+}
+
+<div class="jumbotron text-center">
+    <h2><strong>Projects for Time Application</strong></h2>
+    <hr />
+    @Html.ActionLink("Create Project", "CreateProject", "Projects",
+     null, new { @class = "btn btn-warning" })
+</div>
+
+@if (TempData["Success"] != null)
+{
+<div class="alert alert-success my-2">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    <strong>Success: </strong> @TempData["Success"]
+</div>
+}
+@if (TempData["Error"] != null)
+{
+<div class="alert alert-danger my-2">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    <strong>Error: </strong> @TempData["Error"]
+</div>
+}
+
+<div class="row">
+    <div class="col-sm-10 col-md-10 col-lg-10">
+        <div class="panel text-center">
+            <div class="panel-heading panel-gold">                
+                <h2><strong>Projects</strong></h2>                               
+            </div>
+            <div class="panel-body">
+                <table class="table table-bordered table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th class="text-center">
+                                @Html.DisplayNameFor(model => model.ProjectId)
+                            </th>
+                            <th class="text-center">
+                                @Html.DisplayNameFor(model => model.ProjectName)
+                            </th>
+                            <th class="text-center">
+                                @Html.DisplayNameFor(model => model.ProjectCode)
+                            </th>
+                            <th class="text-center">
+                                @Html.DisplayNameFor(model => model.NatureOfIndustry)
+                            </th>
+                            <th class="text-center">
+                                Actions
+                            </th>
+                        </tr>
+                    </thead>
+                    @foreach (var item in Model)
+                    {
+                        <tbody>
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ProjectId)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ProjectName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ProjectCode)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.NatureOfIndustry)
+                                </td>
+                                <td>
+                                    @*@Html.ActionLink("Edit", "EditProject", "SuperAdmin", new { id = item.ProjectId }, null) |*@
+                                    @Html.ActionLink("Edit", "EditProject", "Projects", new { id = item.ProjectId }, null) |
+                                    @Html.ActionLink("Delete", "DeleteProject", "Projects", new { id = item.ProjectId }, null)
+                                </td>
+                            </tr>
+                        </tbody>
+                    }
+                </table>
+            </div>
+            <div class="panel-footer text-center">
+                @Html.ActionLink("Dashboard", "Dashboard", "SuperAdmin",
+                 null, new { @class = "btn btn-primary" })
+            </div>
+        </div>
+    </div>
+</div>
+

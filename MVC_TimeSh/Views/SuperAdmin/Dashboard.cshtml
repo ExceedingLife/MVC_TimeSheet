@@ -69,7 +69,7 @@
             </div>
         </div>
 
-        <!-- ADMIN COUNT SECTION-->
+        <!-- ADMIN COUNT SECTION -->
         <!--    ROW SECTION 2   -->
         <div class="col-lg-3 col-md-6">
             <div class="panel panel-green">
@@ -125,12 +125,12 @@
                             <span class="glyphicon glyphicon-shopping-cart" style="font-size: 7em;"></span>
                         </div>
                         <div class="col-xs-9 text-right">
-                            <h1>0 @ViewBag.ProjectCount</h1>
+                            <h1>@ViewBag.ProjectCount</h1>
                             <h3>Project Count</h3>
                         </div>
                     </div>
                 </div>
-                <a href="#">
+                <a href="@Url.Action("ViewProjects", "SuperAdmin")">
                     <div class="panel-footer">
                         <span class="pull-left">View Details</span>
                         <span class="pull-right glyphicon glyphicon-circle-arrow-right"></span>

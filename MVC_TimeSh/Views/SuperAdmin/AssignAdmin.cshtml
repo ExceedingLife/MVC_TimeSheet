@@ -1,108 +1,195 @@
-﻿@model MVC_TimeSh.Models.AssignRolesModel
+﻿@using MVC_TimeSh.Models
+@model MVC_TimeSh.Models.AssignRolesModel
+@*@model IEnumerable<MVC_TimeSh.Models.AssignRolesModel>*@
 
-@{ 
+@{
     ViewBag.Title = "Assign Administrator";
 }
 
-<div class="jumbotron">
+<div class="jumbotron text-center">
     <h2>Assign Roles</h2>
-    <p>Add or Remove Administrators in which you 
-    seem fit <strong>SuperAdmin</strong></p>
+    <p>
+        Add or Remove Administrators in which you
+        seem fit <strong>SuperAdmin</strong>
+    </p>
 </div>
 
-@using (Html.BeginForm())
+@if (TempData["Success"] != null)
 {
-    <div class="panel panel-default">
-        <div class="panel-heading">Choose Administrator</div>
-
-        <div class="panel-body">
-            @if (TempData["Success"] != null)
-            {
-                <div class="alert alert-success">
-                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                    <strong>Success: </strong> @TempData["Success"]
-                </div>
-            }
-            @if (TempData["Error"] != null)
-            {
-                <div class="alert alert-danger">
-                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                    <strong>Error: </strong> @TempData["Error"]
-                </div>
-            }
-            @if (TempData["SuccessRole"] != null)
-            {
-                <div class="alert alert-warning">
-                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                    <strong>Success: </strong> @TempData["SuccessRole"]
-                </div>
-            }
-            @if (TempData["ErrorRole"] != null)
-            {
-                <div class="alert alert-danger">
-                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                    <strong>Error: </strong> @TempData["ErrorRole"]
-                </div>
-            }
-            @Html.AntiForgeryToken()
-
-            <div class="row">
-                <div class="col-md-4">
-                    @Html.DropDownListFor(a => a.UserId,
-                     new SelectList(Model.lstAdmins, "UserId", "Username"),
-                     new { @class = "form-control", @id = "userAdmins" })
-                    @* , @onChange = "SelectedValue(this)"*@
-                    @Html.HiddenFor(a => a.UserId)
-                    @Html.ValidationMessageFor(a => a.UserId)
-                </div>
-                <div class="col-md-4"></div>
-                <div class="col-md-4"></div>
-            </div>
-        </div>
+    <div class="alert alert-success">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Success: </strong> @TempData["Success"]
     </div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Error: </strong> @TempData["Error"]
+    </div>
+}
+@if (TempData["SuccessRole"] != null)
+{
+    <div class="alert alert-warning">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Success: </strong> @TempData["SuccessRole"]
+    </div>
+}
+@if (TempData["ErrorRole"] != null)
+{
+    <div class="alert alert-danger">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Error: </strong> @TempData["ErrorRole"]
+    </div>
+}
 
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            Choose User to Assign | Remove Administrator Role
-        </div>
-        <div class="panel-body">
-            <div class="clearfix"></div>
-
-            <div class="row">
-                @for(var i = 0; i < Model.lstUsers.Count(); i++)
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="col-lg-6 col-md-6 col-sm-12 justify-content-center">
+            <div class="panel panel-success">
+                <div class="panel-heading">Choose Administrator</div>
+                @using (Html.BeginForm("RemoveAdmin", "SuperAdmin", FormMethod.Post))
                 {
-                    <div class="col-md-4">
-                        <div>
-                            @Html.CheckBoxFor(u => Model.lstUsers[i].SelectedUsers)
-                            <label>
-                                @Html.DisplayFor(u => Model.lstUsers[i].Username)
-                                @Html.HiddenFor(u => Model.lstUsers[i].UserId)
-                                @Html.HiddenFor(u => Model.lstUsers[i].Name)
-                            </label>
+                    @Html.AntiForgeryToken()
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-10">
+                                @Html.DropDownListFor(a => a.UserId,
+                                    new SelectList(Model.lstAdmins, "UserId", "Username"),
+                                    new { @class = "form-control", @id = "userAdmins" })
+                                @* , @onChange = "SelectedValue(this)"*@
+                                @Html.HiddenFor(a => a.UserId)
+                                @Html.ValidationMessageFor(a => a.UserId)
+                            </div>
                         </div>
+                    </div>
+                    <div class="panel-footer text-center">
+                        <input type="submit" value="Remove Admin Role" class="btn btn-danger" />
                     </div>
                 }
             </div>
+
             <br />
-            <div class="row">
-                <div class="form-group">
-                    <div class="col-md-offset-0 col-md-12">
+            <div class="panel panel-success text-center">
+                <div class="panel-heading">
+                    Choose User to Assign | Remove Administrator Role
+                </div>
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="panel-body">
+                        <div class="clearfix"></div>
+                        @for (var i = 0; i < Model.lstUsers.Count(); i++)
+                        {
+                            <div class="col-md-4">
+                                <div>
+                                    @Html.CheckBoxFor(u => Model.lstUsers[i].SelectedUsers)
+                                    <label>
+                                        @Html.DisplayFor(u => Model.lstUsers[i].Username)
+                                        @Html.HiddenFor(u => Model.lstUsers[i].UserId)
+                                        @Html.HiddenFor(u => Model.lstUsers[i].Name)
+                                    </label>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <div class="panel-footer form-group">
                         <input type="submit" value="Assign Role" class="btn btn-success" />
-                        @* @Url.Action("RemoveAdmin", "SuperAdmin") *@
+
+                        @Html.ActionLink("Cancel", "Dashboard", "SuperAdmin",
+                                            null, new { @class = "btn btn-danger" })
 
                         <button type="button" onclick="clickMe()"
                                 class="btn btn-danger">
                             Remove Role
                         </button>
-
-                        @Html.ActionLink("Cancel", "Dashboard", "SuperAdmin",
-                         null, new { @class = "btn btn-danger" })
                     </div>
+                }
+            </div>
+        </div>
+
+        <!-- COLUMN 2 -->
+        <div class="col-lg-6 col-md-6 col-sm-12 justify-content-center">
+            <div class="panel panel-info">
+                <div class="panel-heading text-center">
+                    Get Selected User Role
                 </div>
+                @using (Html.BeginForm("GetSelectedUserRole", "SuperAdmin"))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="panel-body">
+                        <div class="input-group">
+                            <span class="input-group-addon">User Name</span>
+                            <span class="input-group-addon">
+                                <i class="glyphicon glyphicon-user"></i>
+                            </span>
+                            @* @Html.DropDownListFor(,IEnumerable<SelectListItem>
+                                (vi))*@
+                            @*@Html.DropDownList("username",
+                                new SelectList(ViewBag.SelectUsers, "Value", "Text"), "Choose ...",
+                                new { @class = "form-control" })*@
+                            @Html.DropDownList("username",
+                        (IEnumerable<SelectListItem>)
+                         ViewBag.SelectUsers, "Choose ...",
+                         new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="panel-footer">
+                        <input type="submit" value="Get Role" class="btn btn-primary" />
+                    </div>
+                }
+                @if (ViewBag.RolesForUser != null)
+                {
+                    <div class="alert alert-info text-center">
+                        <strong>Role for User</strong>
+                        <ol style="list-style: decimal inside;">
+                            @foreach (var role in ViewBag.Roles4User)
+                            {
+                                <li>@role</li>
+                            }
+                        </ol>
+                    </div>
+                }
+            </div>
+            <br />
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h4>Change Selected User Role</h4>
+                </div>
+                @using (Html.BeginForm("ChangeSelectedUserRole", "SuperAdmin"))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="panel-body">
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="glyphicon glyphicon-user"></i>
+                            </span>
+                            @Html.DropDownList("username",
+                            (IEnumerable<SelectListItem>)
+                             ViewBag.SelectUsers, "Select Username.",
+                             new { @class = "form-control" })
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="glyphicon glyphicon-edit"></i>
+                            </span>
+                            @Html.DropDownList("role",
+                            (IEnumerable<SelectListItem>)
+                             ViewBag.SelectRoles, "Select Role Name.",
+                             new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="panel-footer text-center">
+                        <input type="submit" value="Switch Role" class="btn btn-primary" />
+                    </div>
+                }
             </div>
         </div>
     </div>
-}
+</div>
+
+
+
 
 <script type="text/javascript">
     //$(function () {
@@ -125,14 +212,14 @@
             });
         }
         //window.location.href =
-            //'Url.Action("RemoveAdmin", "SuperAdmin")/' + userid;
+        //'Url.Action("RemoveAdmin", "SuperAdmin")/' + userid;
         //alert("val" + selectedValue);
     }
-        function SelectedValue(ddlObject) {
-            // Value of ddl // Text of ddl
-            var selectedValue = ddlObject.value;           
-            var selectedText = ddlObject.options[ddlObject.selectedIndex].innerHTML;
-            alert("Selected Value: " + selectedValue + " - Selected Text: " + selectedText);
-        }
-    //})
+    function SelectedValue(ddlObject) {
+        // Value of ddl // Text of ddl
+        var selectedValue = ddlObject.value;
+        var selectedText = ddlObject.options[ddlObject.selectedIndex].innerHTML;
+        alert("Selected Value: " + selectedValue + " - Selected Text: " + selectedText);
+    }
+                    //})
 </script>

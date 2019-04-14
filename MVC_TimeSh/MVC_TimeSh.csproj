@@ -177,7 +177,9 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\ProjectsController.cs" />
     <Compile Include="Controllers\SuperAdminController.cs" />
+    <Compile Include="Controllers\TimeSheetController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -185,6 +187,14 @@
     <Compile Include="Migrations\201904012246192_initial.cs" />
     <Compile Include="Migrations\201904012246192_initial.Designer.cs">
       <DependentUpon>201904012246192_initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201904110502461_projects.cs" />
+    <Compile Include="Migrations\201904110502461_projects.Designer.cs">
+      <DependentUpon>201904110502461_projects.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201904122238191_TimeSheetData.cs" />
+    <Compile Include="Migrations\201904122238191_TimeSheetData.Designer.cs">
+      <DependentUpon>201904122238191_TimeSheetData.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -359,6 +369,13 @@
     <Content Include="Views\Users\DeleteUser.cshtml" />
     <Content Include="Views\SuperAdmin\ChangePassword.cshtml" />
     <Content Include="Views\Users\ChangePassword.cshtml" />
+    <Content Include="Views\Projects\CreateProject.cshtml" />
+    <Content Include="Views\Projects\ProjectListAll.cshtml" />
+    <Content Include="Views\SuperAdmin\ViewProjects.cshtml" />
+    <Content Include="Views\Projects\EditProject.cshtml" />
+    <Content Include="Views\Projects\DeleteProject.cshtml" />
+    <Content Include="Views\TimeSheet\TimeSheetList.cshtml" />
+    <Content Include="Views\TimeSheet\AddTimeSheet.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -379,6 +396,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201904012246192_initial.resx">
       <DependentUpon>201904012246192_initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201904110502461_projects.resx">
+      <DependentUpon>201904110502461_projects.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201904122238191_TimeSheetData.resx">
+      <DependentUpon>201904122238191_TimeSheetData.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

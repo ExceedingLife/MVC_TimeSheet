@@ -57,41 +57,45 @@
                         <li class="nav-item">
                             @Html.ActionLink("Role Manager", "RoleManager", "SuperAdmin")
                         </li>
+                        <li class="nav-item">
+                            @Html.ActionLink("All TimeSheets", "TimeSheetList", "TimeSheet")
+                        </li>
+                        <li class="nav-item">
+                            @Html.ActionLink("Add TimeSheet", "AddTimeSheet", "TimeSheet")
+                        </li>
                         <li>
-                            @Html.ActionLink("Update Password", "ChangePassword", "Users")
+                            @Html.ActionLink("Change Password", "ChangePassword", "Users")
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Add Project</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Reset Password</a>
-                        </li>
+
                     }
 
                     @if (User.IsInRole("SuperAdmin"))
                     {
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Super Admin Dashboard</a>
+                            <a class="nav-link" href="#">Create Admin</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Create Admin</a>
+                            @Html.ActionLink("Add Project", "CreateProject", "Projects")
                         </li>
                     }
                     else if (User.IsInRole("Admin"))
                     {
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Admin Dashboard</a>
+                            @Html.ActionLink("Add Project", "CreateProject", "Projects")
                         </li>
                     }
                     else if (User.IsInRole("User"))
                     {
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">User Dashboard</a>
-                        </li>
                         <li>
                             @Html.ActionLink("Update Password", "ChangePassword", "Users")
                         </li>
                     }
+                    <li class="nav-item">
+                        @Html.ActionLink("TimeSheets", "TimeSheetList", "TimeSheet")
+                    </li>
+                    <li class="nav-item">
+                        @Html.ActionLink("Projects", "ProjectListAll", "Projects")
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Export All TimeSheets</a>
                     </li>
@@ -101,9 +105,7 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#">Push Notification</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Extra</a>
-                    </li>
+
                     @if (Request.IsAuthenticated) { }
                     else
                     {
@@ -131,9 +133,9 @@
     @Styles.Render("~/bundles/jqueryui")
     <script>
         $(function () {
-            // DATEPICKER JQUERY ADDITION
+            // DATEPICKER JQUERY ADDITION "yyyy/mm/dd",
             $(".datepicker").datepicker({
-                dateFormat: "dd/mm/yy",
+                dateFormat: "MM/dd/yyyy",
                 changeYear: true,
                 shownOn: "button"
             }).css("display", "inline-block")
@@ -142,14 +144,30 @@
                     label: "Select a Date",
                     text: false
                 });
-            // DATETIMEPICKER JQUERY ADDITION
-            $(".datetimepicker").datetimepicker({
-                dateFormat: 'dd/MM/yyyy',
-                timeFormat: 'hh: mm: ss',
-                timeInput: true,
-            });
+            //// DATETIMEPICKER JQUERY ADDITION
+            //$(".datetimepicker").datetimepicker({
+            //    dateFormat: 'MM/dd/yyyy',
+            //    timeFormat: 'hh:mm:ss',
+            //    timeInput: true,
+            //});
+
+
+            // add value of hours.
 
         })
+
+        function Proj1Tot() {
+            var p1d1 = $("#P1w1d1").val();
+            var p1d2 = $("#P1w1d2").val();
+            var p1d3 = $("#P1w1d3").val();
+            var p1d4 = $("#P1w1d4").val();
+            var p1d5 = $("#P1w1d5").val();
+            var p1d6 = $("#P1w1d6").val();
+            var p1d7 = $("#P1w1d7").val();
+            var sum = parseInt(p1d1) + parseInt(p1d2) + parseInt(p1d3) + 
+                parseInt(p1d4) + parseInt(p1d5) + parseInt(p1d6) + parseInt(p1d7);
+            $("#p1tot").val(sum) ;
+        }
     </script>
     @RenderSection("scripts", required: false)
 </body>

@@ -1,0 +1,244 @@
+﻿@model MVC_TimeSh.Models.TimeSheetProjectsModel
+@*TimeSheetDetailsModel*@
+@{
+    ViewBag.Title = "Create TimeSheet";
+}
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success my-2">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Success: </strong> @TempData["Success"]
+    </div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger my-2">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Error: </strong> @TempData["Error"]
+    </div>
+}
+
+<div class="row justify-content-center">
+    <div class="col-sm-11 col-md-11 col-lg-11">
+        <div class="panel">
+            <div class="panel-heading text-center">
+                <h1><strong>Create TimeSheet</strong></h1>
+            </div>
+            <div class="panel-body">
+                @using (Html.BeginForm("AddTimeSheet", "TimeSheet"))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="row">
+                        <div class="col-md-3 col-lg-3">
+                            <div class="form-group">
+                                @Html.Label("From Date",
+                                 htmlAttributes: new { @class = "control-label" })
+                                <div class="col-md-10">             
+                                    @Html.EditorFor(a=>a.Proj1, new { htmlAttributes = 
+                                     new { @class = "form-control datepicker" } })
+                                    @*@Html.ValidationMessageFor(model => model.DateCreated,
+                                        "", new { @class = "text-danger" })*@
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-lg-3">
+
+                        </div>
+                        <div class="col-md-3 col-lg-3">
+
+                        </div>
+                        <div class="col-md-3 col-lg-3">
+                            <div class="form-group">
+                                <input type="submit" value="Save Details" class="btn btn-success" /> |
+                                @Html.ActionLink("Clear", "AddTimeSheet", "TimeSheet",
+                                 null, new { @class = "btn btn-danger" }) |
+                                @Html.ActionLink("Home", "Index", "Home", null,
+                                 new { @class="btn btn-warning" })
+                            </div>
+                        </div>
+                    </div>
+                    <div style="margin:10px"></div>
+                    @* HEADERS ROW *@
+                    <div class="row">
+                        <div class="col-md-2 col-lg-2">
+                            @Html.Label("Project Name")
+                        </div>
+                        <div class="col-md-1 col-lg-1">
+                            <label id="label1">[S]</label>
+                            <br />
+                            <label id="date1"></label>
+                        </div>
+                        <div class="col-md-1 col-lg-1">
+                            <label id="label2">[M]</label>
+                            <br />
+                            <label id="date2"></label>
+                        </div>
+                        <div class="col-md-1 col-lg-1">
+                            <label id="label3">[T]</label>
+                            <br />
+                            <label id="date3"></label>
+                        </div>
+                        <div class="col-md-1 col-lg-1">
+                            <label id="label4">[W]</label>
+                            <br />
+                            <label id="date4"></label>
+                        </div>
+                        <div class="col-md-1 col-lg-1">
+                            <label id="label5">[T]</label>
+                            <br />
+                            <label id="date5"></label>
+                        </div>
+                        <div class="col-md-1 col-lg-1">
+                            <label id="label6">[F]</label>
+                            <br />
+                            <label id="date6"></label>
+                        </div>
+                        <div class="col-md-1 col-lg-1">
+                            <label id="label7">[S]</label>
+                            <br />
+                            <label id="date7"></label>
+                        </div>
+                        <div class="col-md-1 col-lg-1">
+                            @Html.Label("Total")
+                            <br />
+                            @Html.Label("Hours")
+                        </div>
+                        <div class="col-md-2 col-lg-2">
+                            @Html.Label("Description")
+                        </div>
+                    </div>
+                    <div style="margin:10px"></div>
+                    @* Model Controls *@
+                    <div class="row">
+                        <div class="col-md-2 form-group">
+                            @Html.DropDownListFor(p=>p.ProjectId1,
+                           (SelectList)ViewBag.ProjectsSelect, "--SELECT--",
+                            new { @class = "form-control" })
+                            @Html.ValidationMessageFor(p=>p.ProjectId1, "",
+                             new { @class = "text-danger" })
+                        </div>
+                        <div class="col-md-1 form-group">
+                            @Html.TextBoxFor(d => d.P1w1d1, new { @class = "form-control",
+                             @onblur = "Proj1Tot()", @maxlength = "2", @Value = "0" })
+                            @Html.ValidationMessageFor(d => d.P1w1d1, "", new { @class = "text-danger" })
+                            <input id="Proj1" name="Proj1" class="form-control" type="hidden" />
+                            <input id="DaysOfWeek1" name="DaysOfWeek1" class="form-control" type="hidden" />
+                        </div>
+                        <div class="col-md-1 form-group">
+                            @Html.TextBoxFor(d => d.P1w1d2, new { @class = "form-control",
+                             @onblur = "Proj1Tot()", @maxlength = "2", @Value = "0" })
+                            @Html.ValidationMessageFor(d => d.P1w1d2, "", new { @class = "text-danger" })
+                            <input id="Proj2" name="Proj2" class="form-control" type="hidden" />
+                            <input id="DaysOfWeek2" name="DaysOfWeek2" class="form-control" type="hidden" />
+                        </div>
+                        <div class="col-md-1 form-group">
+                            @Html.TextBoxFor(d => d.P1w1d3, new { @class = "form-control",
+                             @onblur = "Proj1Tot()", @maxlength = "2", @Value = "0" })
+                            @Html.ValidationMessageFor(d => d.P1w1d3, "", new { @class = "text-danger" })
+                            <input id="Proj3" name="Proj3" class="form-control" type="hidden" />
+                            <input id="DaysOfWeek3" name="DaysOfWeek3" class="form-control" type="hidden" />
+                        </div>
+                        <div class="col-md-1 form-group">
+                            @Html.TextBoxFor(d => d.P1w1d4, new { @class = "form-control",
+                             @onblur = "Proj1Tot()", @maxlength = "2", @Value = "0" })
+                            @Html.ValidationMessageFor(d => d.P1w1d4, "", new { @class = "text-danger" })
+                            <input id="Proj4" name="Proj4" class="form-control" type="hidden" />
+                            <input id="DaysOfWeek4" name="DaysOfWeek4" class="form-control" type="hidden" />
+                        </div>
+                        <div class="col-md-1 form-group">
+                            @Html.TextBoxFor(d => d.P1w1d5, new { @class = "form-control",
+                             @onblur = "Proj1Tot()", @maxlength = "2", @Value = "0" })
+                            @Html.ValidationMessageFor(d => d.P1w1d5, "", new { @class = "text-danger" })
+                            <input id="Proj5" name="Proj5" class="form-control" type="hidden" />
+                            <input id="DaysOfWeek5" name="DaysOfWeek5" class="form-control" type="hidden" />
+                        </div>
+                        <div class="col-md-1 form-group">
+                            @Html.TextBoxFor(d => d.P1w1d6, new { @class = "form-control",
+                             @onblur = "Proj1Tot()", @maxlength = "2", @Value = "0" })
+                            @Html.ValidationMessageFor(d => d.P1w1d6, "", new { @class = "text-danger" })
+                            <input id="Proj6" name="Proj6" class="form-control" type="hidden" />
+                            <input id="DaysOfWeek6" name="DaysOfWeek6" class="form-control" type="hidden" />
+                        </div>
+                        <div class="col-md-1 form-group">
+                            @Html.TextBoxFor(d => d.P1w1d7, new { @class = "form-control",
+                             @onblur = "Proj1Tot()", @maxlength = "2", @Value = "0" })
+                            @Html.ValidationMessageFor(d => d.P1w1d7, "", new { @class = "text-danger" })
+                            <input id="Proj7" name="Proj7" class="form-control" type="hidden" />
+                            <input id="DaysOfWeek7" name="DaysOfWeek7" class="form-control" type="hidden" />
+                        </div>
+                        <div class="col-md-1 form-group">
+                            @Html.TextBoxFor(d=>d.ProjTotal1, new { @class="form-control",
+                            @readonly ="readonly", @maxlength = "2", @id="p1tot" })
+                        </div>
+                        <div class="col-md-2 form-group">
+                            @Html.TextAreaFor(d => d.ProjDesc1, new { @class="form-control",
+                            @maxlength ="50", @rows="1" })
+                        </div>
+                    </div>
+                    <div style="margin:10px"></div>
+                    <div class="row">
+                        <div class="col-md-2 form-group">
+                            @Html.DropDownListFor(p=>p.ProjectId2,
+                           (SelectList)ViewBag.ProjectsSelect, "--SELECT--",
+                            new { @class = "form-control" })
+                            @Html.ValidationMessageFor(p=>p.ProjectId2, "",
+                             new { @class = "text-danger" })
+                        </div>
+                        <div class="col-md-1 form-group">
+                            @Html.TextBoxFor(d => d.P1w2d1, new { @class = "form-control",
+                             @onblur = "", @maxlength = "2" })
+                            @Html.ValidationMessageFor(d => d.P1w2d1, "", new { @class = "text-danger" })
+
+                        </div>
+                        <div class="col-md-1 form-group">
+                            @Html.TextBoxFor(d => d.P1w2d2, new { @class = "form-control",
+                             @onblur = "", @maxlength = "2" })
+                            @Html.ValidationMessageFor(d => d.P1w2d2, "", new { @class = "text-danger" })
+
+                        </div>
+                        <div class="col-md-1 form-group">
+                            @Html.TextBoxFor(d => d.P1w2d3, new { @class = "form-control",
+                             @onblur = "", @maxlength = "2" })
+                            @Html.ValidationMessageFor(d => d.P1w2d3, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-md-1 form-group">
+                            @Html.TextBoxFor(d => d.P1w2d4, new { @class = "form-control",
+                             @onblur = "", @maxlength = "2" })
+                            @Html.ValidationMessageFor(d => d.P1w2d4, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-md-1 form-group">
+                            @Html.TextBoxFor(d => d.P1w2d5, new { @class = "form-control",
+                             @onblur = "", @maxlength = "2" })
+                            @Html.ValidationMessageFor(d => d.P1w2d5, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-md-1 form-group">
+                            @Html.TextBoxFor(d => d.P1w2d6, new { @class = "form-control",
+                             @onblur = "", @maxlength = "2" })
+                            @Html.ValidationMessageFor(d => d.P1w2d6, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-md-1 form-group">
+                            @Html.TextBoxFor(d => d.P1w2d7, new { @class = "form-control",
+                             @onblur = "", @maxlength = "2" })
+                            @Html.ValidationMessageFor(d => d.P1w2d7, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-md-1 form-group">
+                            @Html.TextBoxFor(d=>d.ProjTotal2, new { @class="form-control",
+                            @readonly ="readonly", @maxlength = "2" })
+                        </div>
+                        <div class="col-md-2 form-group">
+                            @Html.TextAreaFor(d => d.ProjDesc2, new { @class="form-control",
+                            @maxlength ="50", @rows="1" })
+                        </div>
+                    </div>
+                    <div style="margin:10px"></div>
+                }
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

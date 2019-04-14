@@ -286,7 +286,7 @@ namespace MVC_TimeSh.Migrations
             //DropForeignKey("dbo.TimeSheetMaster", "UserId", "dbo.AspNetUsers");
             //DropIndex("dbo.ExpenseAudit", new[] { "Status" });
             //DropIndex("dbo.Notifications", new[] { "Status" });
-            //DropIndex("dbo.ProjectMaster", new[] { "ProjecrCode" });
+            //DropIndex("dbo.ProjectMaster", new[] { "ProjectCode" });
             //DropIndex("dbo.TimeSheetAudit", new[] { "UserId" });
             //DropIndex("dbo.TimeSheetDetails", new[] { "UserId" });
             //DropIndex("dbo.TimeSheetMaster", new[] { "UserId" });

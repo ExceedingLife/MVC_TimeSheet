@@ -4,6 +4,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using MVC_TimeSh.Models;
 
 namespace MVC_TimeSh.Models
 {
@@ -29,6 +30,10 @@ namespace MVC_TimeSh.Models
             : base("DefaultConnection", throwIfV1Schema: false)
         {
         }
+
+        public DbSet<Project> Projects { get; set; }
+        public DbSet<TimeSheetMaster> TimeSheetMaster { get; set; }
+        public DbSet<TimeSheetDetails> TimeSheetDetails { get; set; }
 
         public static ApplicationDbContext Create()
         {

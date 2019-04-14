@@ -1,0 +1,64 @@
+﻿@model MVC_TimeSh.Models.ProjectUpdateModel
+@{ 
+    ViewBag.Title = "Delete Project";
+}
+
+<h3>Are you sure you want to delete this Project?</h3>
+<div class="panel">
+    <div class="panel panel-heading panel-gold">
+        <h3><strong>Delete Project Confirmation</strong></h3>
+    </div>
+    <div class="panel-body text-center">
+        <span class="h3">
+            <strong>
+                @Html.DisplayFor(p => p.ProjectName)
+            </strong>            
+        </span>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.ProjectId)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.ProjectId)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.ProjectName)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.ProjectName)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.NatureOfIndustry)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.NatureOfIndustry)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.ProjectCode)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.ProjectCode)
+            </dd>
+        </dl>
+    </div>
+    <div class="panel-footer">
+        @using (Html.BeginForm("DeleteProject", "Projects", 
+                Model, FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-actions no-color">
+                <input type="submit" value="Delete" class="btn btn-danger" 
+                       onclick="return confirm(
+                      'Are you sure you want to delete this project?');"/> |
+
+                @Html.ActionLink("Project List", "ViewProjects", 
+                "SuperAdmin", null, new { @class = "btn btn-primary" })
+            </div>
+        }
+    </div>
+</div>

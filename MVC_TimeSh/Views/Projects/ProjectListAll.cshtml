@@ -1,0 +1,76 @@
+﻿@model IEnumerable<MVC_TimeSh.Models.Project>
+@{
+    ViewBag.Title = "All Projects";
+
+    if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success my-2">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>Success: </strong> @TempData["Success"]
+        </div>
+    }
+    if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger my-2">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>Error: </strong> @TempData["Error"]
+        </div>
+    }
+}
+
+<div class="jumbotron text-center">
+    <h2>Projects for TimeApp</h2>
+</div>
+
+<div class="row">
+    <div class="col-sm-10 col-md-10 col-lg-10">
+        <div class="panel text-center">
+            <div class="panel-heading panel-gold">
+                <h3>Projects</h3>
+            </div>
+            <div class="panel-body">
+                <table class="table table-bordered table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ProjectId)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ProjectName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ProjectCode)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.NatureOfIndustry)
+                            </th>                          
+                        </tr>
+                    </thead>                   
+                    @foreach (var item in Model)
+                    {
+                        <tbody>
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ProjectId)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ProjectName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ProjectCode)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.NatureOfIndustry)
+                                </td>
+                            </tr>
+                        </tbody>                        
+                    }
+                </table>
+            </div>
+            <div class="panel-footer text-center">
+                @Html.ActionLink("Home", "Index", "Home", 
+                 null, new { @class = "btn btn-primary" })
+            </div>
+        </div>
+    </div>
+</div>

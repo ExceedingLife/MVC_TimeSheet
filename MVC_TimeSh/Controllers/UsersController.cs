@@ -190,12 +190,14 @@ namespace MVC_TimeSh.Controllers
                         var deleteRole = await UserManager.RemoveFromRoleAsync(user.Id, r);
                     }
                 }
+                
                 //ApplicationManager.
-               // controller.LogOff();
+                // controller.LogOff();
                 //WebSecurity.Logout() doesnt find.
                 //FormsAuthentication.SignOut();
                 //HttpContext.User = new GenericPrincipal(new GenericIdentity(string.Empty), null);
                 //Roles.DeleteCookie();
+                //Request.GetOwinContext.
                 //Session.Clear();
                 var result = await UserManager.DeleteAsync(user);
                 if (result.Succeeded)
