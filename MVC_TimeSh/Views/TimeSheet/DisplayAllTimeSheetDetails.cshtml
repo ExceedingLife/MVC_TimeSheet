@@ -1,0 +1,78 @@
+﻿@model MVC_TimeSh.Models.TimeSheetDetailsModel
+@{ 
+    ViewBag.Title = "TimeSheet Details";
+}
+
+<div class="row">
+    <div class="col-sm-10 col-md-10 col-lg-10">
+        <div class="panel">
+            <div class="panel-heading">
+                @Html.ActionLink("TimeSheet List", "TimeSheetList", "TimeSheet")
+            </div>
+            <div class="panel-body">
+                <table class="table table-responsive table-bordered" style="border: 1px solid black;" >
+                    <thead>
+                        <tr>
+                            <th><b>@Html.LabelFor(m => m.ProjectName)</b></th>
+                            <th><b>@Html.LabelFor(m => m.Sunday)</b></th>
+                            <th><b>@Html.LabelFor(m => m.Monday)</b></th>
+                            <th><b>@Html.LabelFor(m => m.Tuesday)</b></th>
+                            <th><b>@Html.LabelFor(m => m.Wednesday)</b></th>
+                            <th><b>@Html.LabelFor(m => m.Thursday)</b></th>
+                            <th><b>@Html.LabelFor(m => m.Friday)</b></th>
+                            <th><b>@Html.LabelFor(m => m.Saturday)</b></th>
+                            <th><b>@Html.LabelFor(m => m.Hours)</b></th>
+                            <th><b>@Html.LabelFor(m => m.Comment)</b></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(m => m.ProjectName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(m => m.Sunday)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(m => m.Monday)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(m => m.Tuesday)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(m => m.Wednesday)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(m => m.Thursday)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(m => m.Friday)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(m => m.Saturday)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(m => m.Hours)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(m => m.Comment)
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

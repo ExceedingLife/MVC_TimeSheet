@@ -376,6 +376,7 @@
     <Content Include="Views\Projects\DeleteProject.cshtml" />
     <Content Include="Views\TimeSheet\TimeSheetList.cshtml" />
     <Content Include="Views\TimeSheet\AddTimeSheet.cshtml" />
+    <Content Include="Views\TimeSheet\DisplayAllTimeSheetDetails.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

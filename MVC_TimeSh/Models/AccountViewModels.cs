@@ -95,7 +95,7 @@ namespace MVC_TimeSh.Models
         [Display(Name = "Phone Number")]
         public string PhoneNumber { get; set; }
 
-        [DataType(DataType.DateTime),
+        [DataType(DataType.Date),
             DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}",
             ApplyFormatInEditMode = true)]
         [Display(Name = "Birthday")]
@@ -281,9 +281,15 @@ namespace MVC_TimeSh.Models
         [Display(Name = "Time Sheet Master ID")]
         public int TimeSheetMasterId { get; set; }
         [Required]
+        [DataType(DataType.Date),
+         DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}",
+         ApplyFormatInEditMode = true)]
         [Display(Name = "Start Date")]
         public DateTime FromDate { get; set; }
         [Required]
+        [DataType(DataType.Date),
+         DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}",
+         ApplyFormatInEditMode = true)]
         [Display(Name = "End Date")]
         public DateTime ToDate { get; set; }
         [Display(Name = "Total Hours")]
@@ -292,6 +298,9 @@ namespace MVC_TimeSh.Models
         [Display(Name = "User ID")]
         public string UserId { get; set; }
         [Display(Name = "Date Created")]
+        [DataType(DataType.Date),
+         DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}",
+         ApplyFormatInEditMode = true)]
         public DateTime DateCreated { get; set; }
         [Display(Name = "Month Submitted")]
         public string SubmitedMonth { get; set; }
@@ -310,6 +319,13 @@ namespace MVC_TimeSh.Models
         public string UserId { get; set; }
         public DateTime? DateCreated { get; set; }
         public int TimeSheetMasterId { get; set; }
+        public int Sunday { get; set; }
+        public int Monday { get; set; }
+        public int Tuesday { get; set; }
+        public int Wednesday { get; set; }
+        public int Thursday { get; set; }
+        public int Friday { get; set; }
+        public int Saturday { get; set; }
     }
     public class TimeSheetDetailsModel
     {
@@ -317,9 +333,8 @@ namespace MVC_TimeSh.Models
         public int TimeSheetId { get; set; }
         [Display(Name = "Day of Week")]
         public string DaysOfWeek { get; set; }
-        [Display(Name = "Hours")]
+        [Display(Name = "Total")]
         public int? Hours { get; set; }
-        [Display(Name = "Period")]
         public string Period { get; set; }
         [Display(Name = "Project ID")]
         public int ProjectId { get; set; }
@@ -331,9 +346,22 @@ namespace MVC_TimeSh.Models
         public int TimeSheetMasterId { get; set; }
         [Display(Name = "Project Name")]
         public string ProjectName { get; set; }
+        [Display(Name = "Description")]
+        public string Comment { get; set; }
+        public int Sunday { get; set; }
+        public int Monday { get; set; }
+        public int Tuesday { get; set; }
+        public int Wednesday { get; set; }
+        public int Thursday { get; set; }
+        public int Friday { get; set; }
+        public int Saturday { get; set; }
+    }
+    public class DisplayTimeSheetModel
+    {
     }
     public class TimeSheetProjectsModel
     {
+        [Required]
         [DataType(DataType.Date),
          DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}",
          ApplyFormatInEditMode = true)]
@@ -350,33 +378,34 @@ namespace MVC_TimeSh.Models
         [Required]
         [RegularExpression(@"^\d+$", ErrorMessage = "Enter Only Numbers")]
         [Range(0, 24, ErrorMessage = "0 to 24")]
-        public int? P1w1d1 { get; set; }
+        public int P1w1d1 { get; set; }
         [Required]
         [RegularExpression(@"^\d+$", ErrorMessage = "Enter Only Numbers")]
         [Range(0, 24, ErrorMessage = "0 to 24")]
-        public int? P1w1d2 { get; set; }
+        public int P1w1d2 { get; set; }
         [Required]
         [RegularExpression(@"^\d+$", ErrorMessage = "Enter Only Numbers")]
         [Range(0, 24, ErrorMessage = "0 to 24")]
-        public int? P1w1d3 { get; set; }
+        public int P1w1d3 { get; set; }
         [Required]
         [RegularExpression(@"^\d+$", ErrorMessage = "Enter Only Numbers")]
         [Range(0, 24, ErrorMessage = "0 to 24")]
-        public int? P1w1d4 { get; set; }
+        public int P1w1d4 { get; set; }
         [Required]
         [RegularExpression(@"^\d+$", ErrorMessage = "Enter Only Numbers")]
         [Range(0, 24, ErrorMessage = "0 to 24")]
-        public int? P1w1d5 { get; set; }
+        public int P1w1d5 { get; set; }
         [Required]
         [RegularExpression(@"^\d+$", ErrorMessage = "Enter Only Numbers")]
         [Range(0, 24, ErrorMessage = "0 to 24")]
-        public int? P1w1d6 { get; set; }
+        public int P1w1d6 { get; set; }
         [Required]
         [RegularExpression(@"^\d+$", ErrorMessage = "Enter Only Numbers")]
         [Range(0, 24, ErrorMessage = "0 to 24")]
-        public int? P1w1d7 { get; set; }
+        public int P1w1d7 { get; set; }
+        [Required]
         [RegularExpression(@"^\d+$", ErrorMessage = "Enter Only Numbers")]
-        public int? ProjTotal1 { get; set; }
+        public int ProjTotal1 { get; set; }
         [StringLength(50, ErrorMessage = "Text Length Exceeds Limit")]
         public string ProjDesc1 { get; set; }
 
@@ -523,8 +552,16 @@ namespace MVC_TimeSh.Models
         public string DaysOfWeek6 { get; set; }
         public string DaysOfWeek7 { get; set; }
 
+        public int Sunday { get; set; }
+        public int Monday { get; set; }
+        public int Tuesday { get; set; }
+        public int Wednesday { get; set; }
+        public int Thursday { get; set; }
+        public int Friday { get; set; }
+        public int Saturday { get; set; }
+
         [Required(ErrorMessage = "Choose Project")]
-        public int? ProjectId1 { get; set; }
+        public int ProjectId1 { get; set; }
         public int? ProjectId2 { get; set; }
         public int? ProjectId3 { get; set; }
         public int? ProjectId4 { get; set; }

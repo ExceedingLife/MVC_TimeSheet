@@ -10,6 +10,20 @@
         <strong>Success: </strong> @TempData["Success"]
     </div>
 }
+@if (TempData["SuccessMaster"] != null)
+{
+    <div class="alert alert-success my-2">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Success: </strong> @TempData["SuccessMaster"]
+    </div>
+}
+@if (TempData["SuccessDetails"] != null)
+{
+    <div class="alert alert-success my-2">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Success: </strong> @TempData["SuccessDetails"]
+    </div>
+}
 @if (TempData["Error"] != null)
 {
     <div class="alert alert-danger my-2">
@@ -17,7 +31,20 @@
         <strong>Error: </strong> @TempData["Error"]
     </div>
 }
-
+@if (TempData["ErrorMaster"] != null)
+{
+    <div class="alert alert-danger my-2">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Error: </strong> @TempData["ErrorMaster"]
+    </div>
+}
+@if (TempData["ErrorDetails"] != null)
+{
+    <div class="alert alert-danger my-2">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Error: </strong> @TempData["ErrorDetails"]
+    </div>
+}
 
 <div class="row">
     <div class="col-sm-10 col-md-10 col-lg-10">
@@ -26,7 +53,7 @@
                 <h3>All TimeSheets</h3>
             </div>
             <div class="panel-body">
-                <table class="table table-bordered table-hover 
+                <table class="table table-bordered table-hover
                        table-responsive table-striped">
                     <tr>
                         <th>
@@ -56,38 +83,56 @@
                     </tr>
                     @foreach (var item in Model)
                     {
-                        <tr>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.FromDate)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.ToDate)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.TotalHours)
-                            </td>                            
-                            <td>
-                                @Html.DisplayFor(modelItem => item.DateCreated)
-                            </td>                            
-                            <td>
-                                @Html.DisplayFor(modelItem => item.TimeSheetStatus)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Comment)
-                            </td>
-                            <td>
-                                @*@Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |*@
-                                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                            </td>
-                            <td>
-                                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-                            </td>
-                        </tr>
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.FromDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ToDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TotalHours)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DateCreated)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TimeSheetStatus)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Comment)
+                        </td>
+                        <td>                            
+                            @Html.ActionLink("View", "DisplayAllTimeSheetDetails", "TimeSheet",
+                             new { masterid = item.TimeSheetMasterId }, new { @class = "btn btn-info" })
+                        </td>
+                        @*<td>
+                            @Html.ActionLink("Delete", "DeleteTimeSheet", "TimeSheet",
+                             new { masterId = item.TimeSheetMasterId },
+                             new { @onclick = "return confirm('Delete Confirmation?')",
+                                   @class = "btn btn-danger" })
+                        </td>*@
+                        <td>
+                            @using(Html.BeginForm("DeleteTimeSheet", "Timesheet",
+                                   new { masterId = item.TimeSheetMasterId }, FormMethod.Post,
+                                   new { @onclick = "return confirm('Delete Confirmation?')" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <input type="submit" value="Delete" class="btn btn-danger"/>
+                            }
+                        </td>
+                    </tr>
                     }
                 </table>
             </div>
             <div class="panel-footer">
+                <div class="pull-left">
+                    Showing # to # of # entries
 
+                </div>
+                <div class="pull-right">
+                    <h5>Pagination to do</h5>
+                </div>
             </div>
         </div>
     </div>
