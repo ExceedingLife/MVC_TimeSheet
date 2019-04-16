@@ -141,7 +141,7 @@ namespace MVC_TimeSh.Controllers
                TimeSheetProjectsModel projectsModel)
         {
             // CURRENTLY SETUP FOR ONLY 1 TIME DETAILS RECORD AT A TIME.
-            // WILL SETUP FOR MULTIPLE TIMEDETAIL RECORDS EVENTUALLY.
+            // WILL SETUP FOR MULTIPLE TIME DETAIL RECORDS EVENTUALLY.
             try
             {
                 var detailsModel = new TimeSheetDetails();
@@ -184,10 +184,11 @@ namespace MVC_TimeSh.Controllers
                               w.TimeSheetMasterId.Equals(masterid)).FirstOrDefault();
 
             var detailM = context.TimeSheetDetails.Where(t =>
-                          t.TimeSheetMasterId.Equals(masterModel.TimeSheetMasterId)).FirstOrDefault();//.ToList();
-            //var detail1 = detailM.FirstOrDefault();
+                          t.TimeSheetMasterId.Equals(masterModel.TimeSheetMasterId))
+                          .FirstOrDefault();
 
-            var project = context.Projects.Where(p => p.ProjectId==detailM.ProjectId).FirstOrDefault();
+            var project = context.Projects.Where(p => p.ProjectId==detailM.ProjectId)
+                          .FirstOrDefault();
 
 
             var details = (from master in context.TimeSheetMaster

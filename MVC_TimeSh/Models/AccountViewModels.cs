@@ -178,10 +178,13 @@ namespace MVC_TimeSh.Models
         public string IdShortened { get; set; }
         public string Name { get; set; }
         public string Role { get; set; }
+        [Display(Name = "Phone Number")]
         public string PhoneNumber { get; set; }
         public string Email { get; set; }
+        [Display(Name = "Username")]
         public string UserName { get; set; }
         public string Birthday { get; set; }
+        [Display(Name = "Date Created")]
         public string DateCreated { get; set; }
     }
     public class UpdateUserViewModel
@@ -200,13 +203,11 @@ namespace MVC_TimeSh.Models
         public string Name { get; set; }
         [Display(Name = "Phone Number")]
         public string PhoneNumber { get; set; }
-        //"{0:yyyy/mm/dd}",
         [DataType(DataType.Date),
             DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}",
             ApplyFormatInEditMode = true)]
         [Display(Name = "Birthday")]
         public DateTime Birthday { get; set; }
-
         [DataType(DataType.DateTime)]
         [Display(Name = "Date Created")]
         public DateTime DateCreated { get; set; }
@@ -355,9 +356,6 @@ namespace MVC_TimeSh.Models
         public int Thursday { get; set; }
         public int Friday { get; set; }
         public int Saturday { get; set; }
-    }
-    public class DisplayTimeSheetModel
-    {
     }
     public class TimeSheetProjectsModel
     {

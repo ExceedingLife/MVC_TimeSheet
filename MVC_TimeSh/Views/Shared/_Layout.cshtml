@@ -37,6 +37,7 @@
         </div>
     </div>
 
+    <!-- STILL HAVE ORGANIZING OF NAV-LINKS TO DO.-->
     <!-- SIDE STICKY NAVIGATION BAR -->
     <div class="row">
         <nav class="col-md-2 d-none d-md-block bg-light sidebar">
@@ -45,26 +46,51 @@
 
                     @if (Request.IsAuthenticated)
                     {
+                        @*<li class="nav-item">
+                <span class="glyphicon glyphicon-alert"></span>
+                @Html.ActionLink("Super Admin Dashboard", "Dashboard", "SuperAdmin")
+            </li>*@
                         <li class="nav-item">
-                            @Html.ActionLink("Super Admin Dashboard", "Dashboard", "SuperAdmin")
+                            <a href="@Url.Action("Dashboard", "SuperAdmin")">
+                                <span class="glyphicon glyphicon-dashboard"></span>
+                                Super Admin Dashboard
+                            </a>
                         </li>
                         <li class="nav-item">
-                            @Html.ActionLink("Admin Dashboard", "Dashboard", "Admin")
+                            <a href="@Url.Action("Dashboard", "Admin")">
+                                <span class="glyphicon glyphicon-dashboard"></span>
+                                Admin Dashboard
+                            </a>
                         </li>
                         <li class="nav-item">
-                            @Html.ActionLink("User Dashboard", "UserDashboard", "Users")
+                            <a href="@Url.Action("UserDashboard", "Users")">
+                                <span class="glyphicon glyphicon-dashboard"></span>
+                                User Dashboard
+                            </a>
                         </li>
                         <li class="nav-item">
-                            @Html.ActionLink("Role Manager", "RoleManager", "SuperAdmin")
+                            <a href="@Url.Action("RoleManager", "SuperAdmin")">
+                                <span class="glyphicon glyphicon-bullhorn"></span>
+                                Role Manager
+                            </a>
                         </li>
                         <li class="nav-item">
-                            @Html.ActionLink("All TimeSheets", "TimeSheetList", "TimeSheet")
+                            <a href="@Url.Action("TimeSheetList", "TimeSheet")">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                                All TimeSheets
+                            </a>
                         </li>
                         <li class="nav-item">
-                            @Html.ActionLink("Add TimeSheet", "AddTimeSheet", "TimeSheet")
+                            <a href="@Url.Action("AddTimeSheet", "TimeSheet")">
+                                <span class="glyphicon glyphicon-save"></span>
+                                Add TimeSheet
+                            </a>
                         </li>
                         <li>
-                            @Html.ActionLink("Change Password", "ChangePassword", "Users")
+                            <a href="@Url.Action("ChangePassword", "Users")">
+                                <span class="glyphicon glyphicon-wrench"></span>
+                                Change Password
+                            </a>
                         </li>
 
                     }
@@ -75,13 +101,19 @@
                             <a class="nav-link" href="#">Create Admin</a>
                         </li>
                         <li class="nav-item">
-                            @Html.ActionLink("Add Project", "CreateProject", "Projects")
+                            <a href="@Url.Action("CreateProject", "Projects")">
+                                <span class="glyphicon glyphicon-edit"></span>
+                                Add Project
+                            </a>
                         </li>
                     }
                     else if (User.IsInRole("Admin"))
                     {
                         <li class="nav-item">
-                            @Html.ActionLink("Add Project", "CreateProject", "Projects")
+                            <a href="@Url.Action("CreateProject", "Projects")">
+                                <span class="glyphicon glyphicon-edit"></span>
+                                Add Project
+                            </a>
                         </li>
                     }
                     else if (User.IsInRole("User"))
@@ -91,19 +123,34 @@
                         </li>
                     }
                     <li class="nav-item">
-                        @Html.ActionLink("TimeSheets", "TimeSheetList", "TimeSheet")
+                        <a href="@Url.Action("UsersTable", "Users")">
+                            <span class="glyphicon glyphicon-user"></span>
+                            Users
+                        </a>
                     </li>
                     <li class="nav-item">
-                        @Html.ActionLink("Projects", "ProjectListAll", "Projects")
+                        <a href="@Url.Action("ProjectListAll", "Projects")">
+                            <span class="glyphicon glyphicon-briefcase"></span>
+                            Projects
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Export All TimeSheets</a>
+                        <a href="@Url.Action("UsersTable", "Users")">
+                            <span class="glyphicon glyphicon-th"></span>
+                            Export All TimeSheets
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Export All Expenses</a>
+                        <a href="@Url.Action("UsersTable", "Users")">
+                            <span class="glyphicon glyphicon-usd"></span>
+                            Export All Expenses
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Push Notification</a>
+                        <a href="@Url.Action("UsersTable", "Users")">
+                            <span class="glyphicon glyphicon-pushpin"></span>
+                            Push Notification
+                        </a>
                     </li>
 
                     @if (Request.IsAuthenticated) { }

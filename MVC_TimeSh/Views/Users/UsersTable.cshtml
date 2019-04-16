@@ -86,16 +86,14 @@
                                     @Html.DisplayFor(mi => item.DateCreated)
                                 </td>
                                 <td>
-                                    <a onclick="ShowUserDetails(id = item.UserId)"
-                                       class="btn btn-primary">View</a>
+                                    @*<a href="#" onclick="ShowUserDetails(id = Modal.UserId)"
+                                       class="btn btn-primary">View</a>*@
 
+                                    <input type="button" value="View" onclick="UserDetails(this)"
+                                           data-assigned-id="@item.UserId" class="btn btn-primary" />
+                                    
                                     @*<a href="@Url.Action("Register", "Account")">Register</a>*@
-                                    @*<a asp-controller="Product" asp-action="Display"
-                                        asp-route-id="@ViewBag.ProductId">View Details</a>*@
-                                    @*htmlAttributes: new { @class = "btn btn-default" }*@
-                                    @*@Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |*@
-                                    @*@Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |*@
-                                    @*@Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })*@
+                                    
                                 </td>
                             </tr>
                         </tbody>
@@ -107,12 +105,40 @@
 </div>
 
 <script type="text/javascript">
+
+    //$(function () {
+   
+    //});
+
+    function UserDetails(details) {
+        var id = $(details).data("assigned-id");
+        //application/json '{userId:"'+id+'"}',
+        // "Url.Action("UserDetails", "Users")",
+        $.ajax({
+            url: '/Users/UserDetails',
+            contentType: "text",
+            data: { userId : id },
+            dataType: "html",
+            success: function (data) {
+                $("#contentBody").html(data);
+                $("#modalViewUser").modal("show");
+                //alert(data.responseText);
+            },
+            failure: function (data) {
+                alert(data.responseText);
+            },
+            error: function (data) {
+                alert(data.responseText);
+            }
+        });
+    }
+
     function ShowUserDetails(id) {
-        var url = '@Url.Content("~/")' + "User/Users";
+        var url = '@Url.Content("~/")' + "Users/UserDetails";
         $.ajax({
             type: "POST",
             url: url,
-            data: '{UserId: "' + id + '" }',
+            data: '{ UserId: "' + id + '" }',
             contentType: "application/json; charset-utf-8",
             dataType: "html",
             success: function (response) {
@@ -128,6 +154,7 @@
         });
     }
 </script>
+
 
 <!-- DETAILS MODAL FOR SPECIFIED USER -->
 <div class="modal fade" id="modalViewUser" role="dialog">

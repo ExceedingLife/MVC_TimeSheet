@@ -210,11 +210,9 @@ namespace MVC_TimeSh.Controllers
             return RedirectToAction("UserDashboard", "Users");
         }
 
-        // GET: Users
+        // GET: Users List
         public ActionResult UsersTable()
         {
-            //var lstUsers = context.Users.ToList();
-            //List<Customer> data = await query.ToListAsync();
             var usersWithRole = (from user in context.Users
                                  from userRole in user.Roles
                                  join role in context.Roles on userRole.RoleId
@@ -239,6 +237,7 @@ namespace MVC_TimeSh.Controllers
             return View(usersWithRole);
         }
 
+        // GET: /User/ChangePassword/{id}
         public ActionResult ChangePassword()
         {
             var user = User.Identity.GetUserName();
@@ -249,6 +248,7 @@ namespace MVC_TimeSh.Controllers
 
             return View(update);
         }
+        // POST: /User/ChangePassword/{id}
         [HttpPost]
         public async Task<ActionResult> ChangePassword(UpdatePasswordModel model)
         {
@@ -292,5 +292,38 @@ namespace MVC_TimeSh.Controllers
                 return RedirectToAction("UserDashboard", "Users");
             }
         }
+
+        // GET: /User/UserDetails/{id} (Modal ajax())
+        public async Task<ActionResult> UserDetails(string userId)
+        {
+            try
+            {
+                if(userId == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                var user = await UserManager.FindByIdAsync(userId);
+                UsersViewModel model = new UsersViewModel()
+                {
+                    UserId = user.Id,
+                    IdShortened = user.Id.Substring(0, 10),
+                    Birthday = user.Birthday.ToString(),
+                    Name = user.Name,
+                    DateCreated = user.DateCreated.ToString(),
+                    Email = user.Email,
+                    PhoneNumber = user.PhoneNumber,
+                    UserName = user.UserName
+
+                };
+                return PartialView("UserDetails", model);
+            }
+            catch(Exception ex)
+            {
+                //Console.Write(ex.Message);
+                TempData["Error"] = "Error retrieving User Details";
+                return RedirectToAction("UserDashboard", "Users");
+            }
+        }
+
     }
 }
