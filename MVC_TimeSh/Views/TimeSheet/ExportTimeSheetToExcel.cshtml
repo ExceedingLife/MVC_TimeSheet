@@ -1,0 +1,63 @@
+﻿
+@{ 
+    ViewBag.Title = "Export To Excel";
+}
+
+<h2>Select TimeSheet for Excel</h2>
+<div class="row">
+    <div class="col-md-12 col-lg-12">
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <h4>TimeSheet Report</h4>
+            </div>
+            @using (Html.BeginForm("ExportTimeSheetToExcel", "TimeSheet"))
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-10 col-lg-10">
+                            <div class="col-md-4">
+                                @Html.Label("Pick a User")
+
+                                <div class="input-group">                                
+                                    <span class="input-group-addon">
+                                        <i class="glyphicon glyphicon-user"></i>
+                                    </span>
+                                    @Html.DropDownList("id",
+                                    (IEnumerable<SelectListItem>)
+                                     ViewBag.TimeUsers, "--Select User--",
+                                     new { @class = "form-control" })
+                                </div>    
+                            </div>
+                            <div class="col-md-4">
+                                @Html.Label("Select From Date")
+
+                                <div class="input-group">
+                                    <span class="input-group-addon">
+                                        <i class="glyphicon glyphicon-calendar"></i>
+                                    </span>
+                                    @Html.DropDownList("timeId",
+                                    (IEnumerable<SelectListItem>)
+                                     ViewBag.TimeSheets, "--Select Time--",
+                                     new { @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <div class="form-group">
+                        <input type="submit" value="Confirm Selected" class="btn btn-success" />
+
+                        @*@Html.ActionLink("Other", "ExportTimeSheetToExcel", "TimeSheet",
+                         null, new { @class = "btn btn-success" })*@
+                        @Html.ActionLink("TimeSheets List", "TimeSheetList", "TimeSheet",
+                         null, new { @class = "btn btn-info" })
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>

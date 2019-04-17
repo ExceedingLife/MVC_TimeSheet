@@ -357,6 +357,41 @@ namespace MVC_TimeSh.Models
         public int Friday { get; set; }
         public int Saturday { get; set; }
     }
+    public class ExportTimeSheetModel
+    {
+        [Display(Name = "Time Master ID")]
+        public int TimeSheetMasterId { get; set; }
+        [Display(Name = "Date Created")]
+        public string DateCreated { get; set; }
+        [Display(Name = "Start Date")]
+        public string FromDate { get; set; }
+        [Display(Name = "End Date")]
+        public string ToDate { get; set; }
+        public string Period { get; set; }
+        [Display(Name = "Month Submitted")]
+        public string SubmitedMonth { get; set; }
+        [Display(Name = "Status")]
+        public int TimeSheetStatus { get; set; }
+        [Display(Name = "Total Hours")]
+        public int? TotalHours { get; set; }
+        [Display(Name = "Description")]
+        public string Comment { get; set; }        
+        public string UserId { get; set; }
+        [Display(Name = "User ID")]
+        public string IdShortened { get; set; }
+        public string Username { get; set; }
+        [Display(Name = "Project ID")]
+        public int ProjectId { get; set; }        
+        [Display(Name = "Project Name")]
+        public string ProjectName { get; set; }
+        public int Sunday { get; set; }
+        public int Monday { get; set; }
+        public int Tuesday { get; set; }
+        public int Wednesday { get; set; }
+        public int Thursday { get; set; }
+        public int Friday { get; set; }
+        public int Saturday { get; set; }
+    }
     public class TimeSheetProjectsModel
     {
         [Required]
@@ -567,4 +602,5 @@ namespace MVC_TimeSh.Models
         public int? ProjectId6 { get; set; }
         public int? ProjectId7 { get; set; }
     }
+
 }
