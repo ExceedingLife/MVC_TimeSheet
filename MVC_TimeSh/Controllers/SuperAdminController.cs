@@ -171,7 +171,6 @@ namespace MVC_TimeSh.Controllers
                 string role = "";
                 role = TempData["EditRole"].ToString();                
                 //role = ViewBag.RoleEdit;
-                //string role = ViewBag.RoleEdit ?? "";
                 manager.RemoveFromRole(user.Id, role);
                 var roleResult =
                     manager.AddToRole(user.Id, model.UserRoles);
@@ -194,63 +193,6 @@ namespace MVC_TimeSh.Controllers
                 return RedirectToAction("Dashboard");
             }            
         }
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult EditSuperAdmin([Bind]UpdateUserViewModel model)
-        //{
-        //    var store = new UserStore<ApplicationUser>(context);
-        //    var manager = new UserManager<ApplicationUser>(store);
-
-        //    //ModelState.Remove("PhoneNumber");
-        //    //ModelState.Remove("Birthday");
-        //    //ModelState.Remove("Name");
-        //    //ModelState.Remove("UserRoles");
-
-        //    if (ModelState.IsValid)
-        //    {
-        //        var user = manager.FindById(model.UserId);
-        //        if (user == null)
-        //        {
-        //            return HttpNotFound();
-        //        }
-        //        user.Email = model.Email;
-        //        user.UserName = model.UserName;
-        //        user.Name = model.Name;
-        //        user.PhoneNumber = model.PhoneNumber;
-        //        user.Birthday = model.Birthday;
-        //        user.DateCreated = Convert.ToDateTime(model.DateCreated);
-        //        var roleResult =
-        //            manager.AddToRole(user.Id, model.UserRoles);
-        //        if (!roleResult.Succeeded)
-        //        {
-        //            TempData["ErrorRole"] = "Error adding User Role";
-        //            return RedirectToAction("Dashboard");
-        //        }
-        //        manager.Update(user);
-        //        context.SaveChanges();                
-        //        TempData["Success"] = "User Updated Successfully";              
-        //        return RedirectToAction("GetAllUsers", "SuperAdmin");
-        //    }
-        //    //foreach (ModelState modelState in ViewData.ModelState.Values)
-        //    //{
-        //    //    foreach (ModelError error in modelState.Errors)
-        //    //    {
-        //    //        List<ModelError> lsterrors = new List<ModelError>();
-        //    //        lsterrors.Add(error);
-        //    //    }
-        //    //}
-        //    TempData["Error"] = "User Update Failed";
-        //    return RedirectToAction("Dashboard");
-        //}
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<ActionResult> EditSuperAdmin([Bind]UpdateUserViewModel model)
-        //{
-        //        var user = await manager.FindByIdAsync(model.UserId);        
-        //        var roleResult = 
-        //            await manager.AddToRoleAsync(user.Id, model.UserRoles);
-        //}
-
 
         public ActionResult RoleManager()
         {
@@ -317,13 +259,6 @@ namespace MVC_TimeSh.Controllers
         // ASSIGN ADMINISTRATOR
         public ActionResult AssignAdmin()
         {
-            //var lstAdmins = (from users in context.Users
-            //                 from roles in users.Roles
-            //                 join r in context.Roles
-            //                 on roles.RoleId equals r.Id
-            //                 where r.Name.Equals("Admin")
-            //                 select new AssignRolesModel()
-            //                 { }).ToList();
             AssignRolesModel model = new AssignRolesModel();
             model.lstAdmins = AdminList();
             model.lstUsers = UserList();
@@ -345,7 +280,6 @@ namespace MVC_TimeSh.Controllers
                     model.lstAdmins = AdminList();
                     return View(model);
                 }
-
                 var selectedUsersCount = (from user in model.lstUsers
                                           where user.SelectedUsers == true
                                           select user).Count();
@@ -356,7 +290,6 @@ namespace MVC_TimeSh.Controllers
                     model.lstUsers = UserList();
                     return View(model);
                 }
-
                 if (ModelState.IsValid)
                 {
                     List<UserModel> users = new List<UserModel>();
@@ -372,7 +305,6 @@ namespace MVC_TimeSh.Controllers
                             users.Add(u);
                         }
                     }
-
                     foreach(var u in users)
                     {
                         au = context.Users.Where(x => x.Id.Equals(u.UserId,
@@ -380,7 +312,6 @@ namespace MVC_TimeSh.Controllers
                         manager.RemoveFromRole(au.Id, "User");
                         manager.AddToRole(au.Id, "Admin");
                     }
-
                     TempData["Success"] = "Roles Assigned Successfully";
                     return RedirectToAction("AssignAdmin");
                 }
@@ -388,13 +319,13 @@ namespace MVC_TimeSh.Controllers
             catch (Exception)
             {
                 throw;
-            }           
+            }      
 
-            return View();
+            return RedirectToAction("AssignAdmin");
         }
 
         [HttpPost]
-        //[ValidateAntiForgeryToken]
+        [ValidateAntiForgeryToken]
         public ActionResult RemoveAdmin(string userid)
         {
             ApplicationUser au = context.Users.Where(u => u.Id.Equals(userid,
@@ -405,22 +336,15 @@ namespace MVC_TimeSh.Controllers
             manager.RemoveFromRole(au.Id, "Admin");
             manager.AddToRole(au.Id, "User");
 
-            //AssignRolesModel model = new AssignRolesModel();
-            //model.lstAdmins = AdminList();
-            //model.lstUsers = UserList();
-            //UsersSelectList();
-            //RolesSelectList();
-
             if (Request.IsAjaxRequest())
             {
                 TempData["SuccessRole"] = "Role Removed Successfully";
                 Json(Url.Action("AssignAdmin"));
                 return RedirectToAction("AssignAdmin", "SuperAdmin");
             }
-
-            //TempData["Success"] = "Roles Assigned Successfully";
-            return RedirectToAction("AssignAdmin");
-           // return View("AssignAdmin", model);
+            // TempData["Success"] = "Roles Assigned Successfully";
+            // return View("AssignAdmin", model);
+            return RedirectToAction("AssignAdmin");           
         }
 
         [HttpPost]
@@ -432,7 +356,8 @@ namespace MVC_TimeSh.Controllers
                 lstAdmins = AdminList(),
                 lstUsers = UserList()
             };
-
+            UsersSelectList();
+            RolesSelectList();
             if (!string.IsNullOrWhiteSpace(username))
             {
                 var store = new UserStore<ApplicationUser>(context);
@@ -459,7 +384,6 @@ namespace MVC_TimeSh.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult ChangeSelectedUserRole(string username, string role)
         {
-            //AssignRolesModel rolesModel;
             if (!string.IsNullOrWhiteSpace(username) && !string.IsNullOrWhiteSpace(role))
             {
                 var store = new UserStore<ApplicationUser>(context);
@@ -493,7 +417,6 @@ namespace MVC_TimeSh.Controllers
                             }).ToList();
 
             List<AdminModel> listAdmins = lstAdmin;
-            //lstAdmins.Add(new AdminModel)
             return listAdmins;
         }
         public List<UserModel> UserList()
@@ -513,7 +436,6 @@ namespace MVC_TimeSh.Controllers
                             }).ToList();
 
             List<UserModel> listUser = lstUser;
-            //lstAdmins.Add(new AdminModel)
             return listUser;
         }
 
@@ -634,7 +556,6 @@ namespace MVC_TimeSh.Controllers
 
             return View(projectList);
         }
-
 
         //public ActionResult EditProject(int id)
         //{

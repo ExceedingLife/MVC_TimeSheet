@@ -156,7 +156,7 @@ namespace MVC_TimeSh.Models
     public class AssignRolesModel
     {
         public List<AdminModel> lstAdmins { get; set; }
-        [Required(ErrorMessage = "Choose Admin")]
+        //[Required(ErrorMessage = "Choose Admin")]
         public string UserId { get; set; }
         public List<UserModel> lstUsers { get; set; }
         public int? AssignToAdmin { get; set; }

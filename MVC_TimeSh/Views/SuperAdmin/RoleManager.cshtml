@@ -78,8 +78,10 @@
             </div>
             <div class="panel-body text-center">
                 @*<a href="/SuperAdmin/AssignAdmin?" class="btn btn-success">Assign Admin</a>*@
-                @Html.ActionLink("Assign Admin", "AssignAdmin", "SuperAdmin", 
+                @Html.ActionLink("Assign Roles", "AssignAdmin", "SuperAdmin", 
                                   null, new { @class = "btn btn-success" })
+                @Html.ActionLink("Dashboard", "Dashboard", "SuperAdmin", 
+                                  null, new { @class="btn btn-info" })
             </div>
         </div>
     </div> <!-- End of First Column -->

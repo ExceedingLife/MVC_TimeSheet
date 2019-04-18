@@ -47,7 +47,7 @@
     <div class="col-lg-12 col-md-12 col-sm-12">
         <div class="col-lg-6 col-md-6 col-sm-12 justify-content-center">
             <div class="panel panel-success">
-                <div class="panel-heading">Choose Administrator</div>
+                <div class="panel-heading">Select to Remove Administrator Role</div>
                 @using (Html.BeginForm("RemoveAdmin", "SuperAdmin", FormMethod.Post))
                 {
                     @Html.AntiForgeryToken()
@@ -72,9 +72,11 @@
             <br />
             <div class="panel panel-success text-center">
                 <div class="panel-heading">
-                    Choose User to Assign | Remove Administrator Role
+                    Choose User/Users to Assign Administrator Role 
                 </div>
-                @using (Html.BeginForm())
+                @**@
+
+                @using (Html.BeginForm("AssignAdmin", "SuperAdmin", FormMethod.Post))
                 {
                     @Html.AntiForgeryToken()
                     <div class="panel-body">
@@ -96,13 +98,12 @@
                     <div class="panel-footer form-group">
                         <input type="submit" value="Assign Role" class="btn btn-success" />
 
-                        @Html.ActionLink("Cancel", "Dashboard", "SuperAdmin",
+                        @Html.ActionLink("Dashboard", "Dashboard", "SuperAdmin",
                                             null, new { @class = "btn btn-danger" })
 
-                        <button type="button" onclick="clickMe()"
-                                class="btn btn-danger">
-                            Remove Role
-                        </button>
+                        @*<button type="button" onclick="clickMe()"
+                                  class="btn btn-danger"> Remove Role
+                        </button>*@
                     </div>
                 }
             </div>
@@ -123,30 +124,24 @@
                             <span class="input-group-addon">
                                 <i class="glyphicon glyphicon-user"></i>
                             </span>
-                            @* @Html.DropDownListFor(,IEnumerable<SelectListItem>
-                                (vi))*@
-                            @*@Html.DropDownList("username",
-                                new SelectList(ViewBag.SelectUsers, "Value", "Text"), "Choose ...",
-                                new { @class = "form-control" })*@
                             @Html.DropDownList("username",
-                        (IEnumerable<SelectListItem>)
-                         ViewBag.SelectUsers, "Choose ...",
-                         new { @class = "form-control" })
+                            (IEnumerable<SelectListItem>)
+                             ViewBag.SelectUsers, "Choose ...",
+                             new { @class = "form-control" })
                         </div>
                     </div>
-                    <div class="panel-footer">
+                    <div class="panel-footer text-center">
                         <input type="submit" value="Get Role" class="btn btn-primary" />
                     </div>
                 }
-                @if (ViewBag.RolesForUser != null)
+                @if (ViewBag.Roles4User != null)
                 {
                     <div class="alert alert-info text-center">
                         <strong>Role for User</strong>
                         <ol style="list-style: decimal inside;">
-                            @foreach (var role in ViewBag.Roles4User)
-                            {
-                                <li>@role</li>
-                            }
+                            <li>@ViewBag.Roles4User</li>
+                            @*@foreach (var role in ViewBag.Roles4User)
+                            { <li>@role</li> }*@
                         </ol>
                     </div>
                 }
@@ -189,8 +184,6 @@
 </div>
 
 
-
-
 <script type="text/javascript">
     //$(function () {
 
@@ -206,9 +199,7 @@
                 success: function (result) {
                     window.location.assign(result);
                 }
-                //error: function () {
-                //    alert("Error");
-                //}
+                //error: function(){alert("Error");}
             });
         }
         //window.location.href =
@@ -221,5 +212,4 @@
         var selectedText = ddlObject.options[ddlObject.selectedIndex].innerHTML;
         alert("Selected Value: " + selectedValue + " - Selected Text: " + selectedText);
     }
-                    //})
 </script>
