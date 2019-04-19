@@ -95,9 +95,9 @@ namespace MVC_TimeSh.Models
         [Display(Name = "Phone Number")]
         public string PhoneNumber { get; set; }
 
-        [DataType(DataType.Date),
-            DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}",
-            ApplyFormatInEditMode = true)]
+        //[DataType(DataType.Date),
+        //    DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}",
+        //    ApplyFormatInEditMode = true)]
         [Display(Name = "Birthday")]
         public DateTime Birthday { get; set; }
 
@@ -156,7 +156,6 @@ namespace MVC_TimeSh.Models
     public class AssignRolesModel
     {
         public List<AdminModel> lstAdmins { get; set; }
-        //[Required(ErrorMessage = "Choose Admin")]
         public string UserId { get; set; }
         public List<UserModel> lstUsers { get; set; }
         public int? AssignToAdmin { get; set; }
@@ -203,12 +202,12 @@ namespace MVC_TimeSh.Models
         public string Name { get; set; }
         [Display(Name = "Phone Number")]
         public string PhoneNumber { get; set; }
-        [DataType(DataType.Date),
-            DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}",
-            ApplyFormatInEditMode = true)]
+        //[DataType(DataType.Date),
+        //    DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}",
+        //    ApplyFormatInEditMode = true)]
         [Display(Name = "Birthday")]
         public DateTime Birthday { get; set; }
-        [DataType(DataType.DateTime)]
+        //[DataType(DataType.DateTime)]
         [Display(Name = "Date Created")]
         public DateTime DateCreated { get; set; }
         [Required]

@@ -47,9 +47,9 @@
                     @if (Request.IsAuthenticated)
                     {
                         @*<li class="nav-item">
-                <span class="glyphicon glyphicon-alert"></span>
-                @Html.ActionLink("Super Admin Dashboard", "Dashboard", "SuperAdmin")
-            </li>*@
+                                <span class="glyphicon glyphicon-alert"></span>
+                                @Html.ActionLink("Super Admin Dashboard", "Dashboard", "SuperAdmin")
+                            </li>*@
                         <li class="nav-item">
                             <a href="@Url.Action("Dashboard", "SuperAdmin")">
                                 <span class="glyphicon glyphicon-dashboard"></span>
@@ -165,6 +165,11 @@
         </nav>
 
         <div class="col-md-9 col-lg-10 px-4 ml-sm-auto container body-content">
+            @Scripts.Render("~/bundles/jquery")
+            @Scripts.Render("~/bundles/bootstrap")
+            @Scripts.Render("~/bundles/jqueryui")
+            <script src="~/Scripts/jquery-ui-timepicker-addon.min.js"></script>
+
             @RenderBody()
             <hr />
             <footer>
@@ -173,15 +178,16 @@
         </div>
     </div>
     @*<script type="text/javascript"
-        src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.3/i18n/jquery-ui-timepicker-addon-i18n.min.js">
-      </script>*@
-    @Scripts.Render("~/bundles/jquery")
+          src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.3/i18n/jquery-ui-timepicker-addon-i18n.min.js">
+        </script>*@
+    @*@Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
-    @Styles.Render("~/bundles/jqueryui")
+    @Styles.Render("~/bundles/jqueryui")*@
+
     <script>
         $(function () {
             // DATEPICKER JQUERY ADDITION "yyyy/mm/dd",
-            $(".datepicker").datepicker({
+            /*$(".datepicker").datepicker({
                 dateFormat: "MM/dd/yyyy",
                 changeYear: true,
                 shownOn: "button"
@@ -190,14 +196,18 @@
                     icons: { primary: "ui-icon-calendar" },
                     label: "Select a Date",
                     text: false
-                });
+                });*/
             //// DATETIMEPICKER JQUERY ADDITION
-            //$(".datetimepicker").datetimepicker({
-            //    dateFormat: 'MM/dd/yyyy',
-            //    timeFormat: 'hh:mm:ss',
-            //    timeInput: true,
-            //});
+            $(".datetimepicker").datetimepicker({
+                showButtonPanel: true,
+                showSecond:null,
+                dateFormat: 'MM/dd/yy',
+                timeFormat: 'hh:mm',
+                timeInput: true,
+            });
+            //$(".tiepicker").timepicker({
 
+            //})
 
             // add value of hours.
 
@@ -211,9 +221,9 @@
             var p1d5 = $("#P1w1d5").val();
             var p1d6 = $("#P1w1d6").val();
             var p1d7 = $("#P1w1d7").val();
-            var sum = parseInt(p1d1) + parseInt(p1d2) + parseInt(p1d3) + 
+            var sum = parseInt(p1d1) + parseInt(p1d2) + parseInt(p1d3) +
                 parseInt(p1d4) + parseInt(p1d5) + parseInt(p1d6) + parseInt(p1d7);
-            $("#p1tot").val(sum) ;
+            $("#p1tot").val(sum);
         }
     </script>
     @RenderSection("scripts", required: false)

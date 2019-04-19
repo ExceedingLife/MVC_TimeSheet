@@ -28,8 +28,8 @@ namespace MVC_TimeSh
             // Added Bundles for jQuery-ui DatePicker.
             bundles.Add(new ScriptBundle("~/bundles/jqueryui").Include(
                 "~/Scripts/jquery-ui-1.12.1.js"));
-
-            bundles.Add(new ScriptBundle("~/Content/jqueryui").Include(
+            //ScriptBundle
+            bundles.Add(new StyleBundle("~/Content/jqueryui").Include(
                 "~/Content/themes/base/jquery-ui.css"));
             // Added Bundle for jQuery-ui TimePicker
             bundles.Add(new ScriptBundle("~/Content/jqueryuitime").Include(

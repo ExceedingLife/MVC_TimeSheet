@@ -82,7 +82,7 @@
              htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.EditorFor(model => model.Birthday,
-                 new { htmlAttributes = new { @class = "form-control datepicker" } })
+                 new { htmlAttributes = new { @class = "form-control datetimepicker" } })
                 
                 @Html.ValidationMessageFor(model => model.Birthday, "",
                  new { @class = "text-danger" })
@@ -104,9 +104,8 @@
             @Html.LabelFor(model => model.UserRoles,
              htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("UserRoles", (SelectList)ViewBag.Roles, "-- SELECT --")
-                @*new { htmlAttributes = new { @class = "form-control" } })*@
-
+                @Html.DropDownList("UserRoles", (SelectList)ViewBag.Roles, 
+                "-- SELECT --", new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.UserRoles, "",
                  new { @class = "text-danger" })
             </div>
