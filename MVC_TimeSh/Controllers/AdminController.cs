@@ -14,8 +14,7 @@ using System.Data.Entity;
 
 namespace MVC_TimeSh.Controllers
 {
-    //[Authorize(Roles = "Admin, SuperAdmin")]
-    [Authorize]
+    [Authorize(Roles = "Admin, SuperAdmin")]
     public class AdminController : Controller
     {
         private ApplicationSignInManager _signInManager;

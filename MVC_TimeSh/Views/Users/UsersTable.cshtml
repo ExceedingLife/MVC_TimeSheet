@@ -1,4 +1,8 @@
-﻿@model IEnumerable<MVC_TimeSh.Models.UsersViewModel>
+﻿@*@model IEnumerable<MVC_TimeSh.Models.UsersViewModel>*@
+@model PagedList.IPagedList<MVC_TimeSh.Models.UsersViewModel>
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
 @{
     ViewBag.Title = "All Users";
 
@@ -24,32 +28,62 @@
             <div class="panel-heading">Members</div>
 
             <div class="panel-body">
+                @using (Html.BeginForm("UsersTable", "Users", FormMethod.Get))
+                {
+                    <p>
+                        <b>Search by Name | Email | Username:</b> 
+                        @Html.TextBox("searchString", ViewBag.CurrentFilter as string)
+                        <input type="submit" value="Search" class="btn btn-default" />
+                    </p>
+                }
                 <table class="table table-bordered table-striped table-hover">
                     <thead>
                         <tr>
                             <th>
-                                @Html.DisplayNameFor(m => m.IdShortened)
+                                @Html.ActionLink("User ID", "UsersTable",
+                                 new { sortOrder = ViewBag.IdSortParam,
+                                     currentFilter = ViewBag.CurrentFilter })
+                                @*@Html.DisplayNameFor(m => m.IdShortened)*@
                             </th>
                             <th>
-                                @Html.DisplayNameFor(m => m.Name)
+                                @Html.ActionLink("Name", "UsersTable",
+                                 new { sortOrder = ViewBag.NameSortParam,
+                                     currentFilter = ViewBag.CurrentFilter })
+                                @*@Html.DisplayNameFor(m => m.Name)*@
                             </th>
                             <th>
-                                @Html.DisplayNameFor(m => m.Role)
+                                @Html.ActionLink("Role", "UsersTable",
+                                 new { sortOrder = ViewBag.RoleSortParam,
+                                     currentFilter = ViewBag.CurrentFilter })
+                                @*@Html.DisplayNameFor(m => m.Role)*@
                             </th>
                             <th>
-                                @Html.DisplayNameFor(m => m.PhoneNumber)
+                                @Html.DisplayName("Phone Number")
+                                @*@Html.DisplayNameFor(m => m.PhoneNumber)*@
                             </th>
                             <th>
-                                @Html.DisplayNameFor(m => m.Email)
+                                @Html.ActionLink("Email", "UsersTable",
+                                 new { sortOrder = ViewBag.EmailSortParam,
+                                     currentFilter = ViewBag.CurrentFilter })
+                                @*@Html.DisplayNameFor(m => m.Email)*@
                             </th>
                             <th>
-                                @Html.DisplayNameFor(m => m.UserName)
+                                @Html.ActionLink("Username", "UsersTable",
+                                 new { sortOrder = ViewBag.UnameSortParam,
+                                     currentFilter = ViewBag.CurrentFilter })
+                                @*@Html.DisplayNameFor(m => m.UserName)*@
                             </th>
                             <th>
-                                @Html.DisplayNameFor(m => m.Birthday)
+                                @Html.ActionLink("Birthday", "UsersTable",
+                                 new { sortOrder = ViewBag.BdaySortParam,
+                                     currentFilter = ViewBag.CurrentFilter })
+                                @*@Html.DisplayNameFor(m => m.Birthday)*@
                             </th>
                             <th>
-                                @Html.DisplayNameFor(m => m.DateCreated)
+                                @Html.ActionLink("Date Created", "UsersTable",
+                                 new { sortOrder = ViewBag.CreateSortParam,
+                                     currentFilter = ViewBag.CurrentFilter })
+                                @*@Html.DisplayNameFor(m => m.DateCreated)*@
                             </th>
                             <th>
                                 View Details
@@ -103,9 +137,12 @@
         </div>
     </div>
 </div>
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+@Html.PagedListPager(Model, page => Url.Action("UsersTable",
+    new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
 
 <script type="text/javascript">
-
     //$(function () {
    
     //});

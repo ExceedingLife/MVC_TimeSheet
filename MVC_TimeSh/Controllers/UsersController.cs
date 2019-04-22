@@ -1,20 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Hosting;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using Microsoft.AspNet.Identity;
+using Microsoft.Owin.Security;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.AspNet.Identity.EntityFramework;
-using MVC_TimeSh.Controllers;
 using MVC_TimeSh.Models;
-using System.Web.Hosting;
+using MVC_TimeSh.Controllers;
+using PagedList;
 
 namespace MVC_TimeSh.Controllers
 {
-    
+    //[Authorize(Roles = "Users, Developer")]
+    [Authorize]
     public class UsersController : Controller
     {
         private ApplicationSignInManager _signInManager;
@@ -52,6 +55,14 @@ namespace MVC_TimeSh.Controllers
             private set { _userManager = value; }
         }
 
+        public IAuthenticationManager AuthManager
+        {
+            get
+            {
+                return HttpContext.GetOwinContext().Authentication;
+            }
+        }
+
         // GET: User Dashboard.
         [Authorize]
         public ActionResult UserDashboard()
@@ -64,6 +75,48 @@ namespace MVC_TimeSh.Controllers
 
             return View();
         }
+
+        // GET: /User/Create/{id}
+        [Authorize]
+        public ActionResult CreateUser()
+        {
+            var model = new RegisterViewModel();
+            model.Birthday = DateTime.Today.AddYears(-125);
+
+            ViewBag.Roles = new SelectList(context.Roles.Where(u =>
+           !u.Name.Contains("SuperAdmin")).ToList(), "Name", "Name");
+
+            return View(model);
+        }
+        //POST: /User/Create/{id}
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> CreateUser(RegisterViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = new ApplicationUser
+                {
+                    Name = model.Name,
+                    Email = model.Email,
+                    UserName = model.UserName,
+                    PhoneNumber = model.PhoneNumber,
+                    Birthday = model.Birthday,
+                    DateCreated = Convert.ToDateTime(model.DateCreated)                
+                };
+                string hashPass = UserManager.PasswordHasher.HashPassword(model.Password);
+                var result = await UserManager.CreateAsync(user, hashPass);
+                TempData["Success"] = "User Created Successfully";
+                if (result.Succeeded)
+                {
+                    await UserManager.AddToRoleAsync(user.Id, model.UserRoles);
+                }
+                return RedirectToAction("UsersTable");
+                //return RedirectToAction("UserDashboard");
+            }
+            return View();
+        }
+
 
         // Get: /User/Edit/{id}
         [Authorize]
@@ -159,17 +212,15 @@ namespace MVC_TimeSh.Controllers
         }
         // POST: /User/Delete/{id}
         [HttpPost, ActionName("DeleteUser")]
-        [ValidateAntiForgeryToken]//(string id)
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(UpdateUserViewModel model)
         {
             if (ModelState.IsValid)
-            {//(id==null)//
+            {
                 if(model == null)
                 {
                     return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
                 }
-                //AccountController controller = new AccountController();
-                //(id);//
                 var user = await UserManager.FindByIdAsync(model.UserId);
                 var logins = user.Logins;
                 var roles = await UserManager.GetRolesAsync(user.Id);
@@ -190,15 +241,8 @@ namespace MVC_TimeSh.Controllers
                         var deleteRole = await UserManager.RemoveFromRoleAsync(user.Id, r);
                     }
                 }
-                
-                //ApplicationManager.
-                // controller.LogOff();
-                //WebSecurity.Logout() doesnt find.
-                //FormsAuthentication.SignOut();
-                //HttpContext.User = new GenericPrincipal(new GenericIdentity(string.Empty), null);
-                //Roles.DeleteCookie();
-                //Request.GetOwinContext.
-                //Session.Clear();
+                AuthManager.SignOut();
+
                 var result = await UserManager.DeleteAsync(user);
                 if (result.Succeeded)
                 {
@@ -211,17 +255,27 @@ namespace MVC_TimeSh.Controllers
         }
 
         // GET: Users List
-        public ActionResult UsersTable()
+        public ActionResult UsersTable(string sortOrder, string searchString,
+                                       string currentFilter, int? page)
         {
+            ViewBag.CurrentSort = sortOrder;
+            ViewBag.CreateSortParam = String.IsNullOrEmpty(sortOrder) ? "CreateSortDesc" : "";
+            ViewBag.IdSortParam = sortOrder == "IdSort" ? "IdSortDesc" : "IdSort";
+            ViewBag.NameSortParam = sortOrder == "NameSort" ? "NameSortDesc" : "NameSort";
+            ViewBag.BdaySortParam = sortOrder == "BdaySort" ? "BdaySortDesc" : "BdaySort";
+            ViewBag.EmailSortParam = sortOrder == "EmailSort" ? "EmailSortDesc" : "EmailSort";
+            ViewBag.UnameSortParam = sortOrder == "UnameSort" ? "UnameSortDesc" : "UnameSort";
+            ViewBag.RoleSortParam = sortOrder == "RoleSort" ? "RoleSortDesc" : "RoleSort";
+
             var usersWithRole = (from user in context.Users
                                  from userRole in user.Roles
                                  join role in context.Roles on userRole.RoleId
                                  equals role.Id
-                                 orderby user.DateCreated
+                                 //orderby user.DateCreated
                                  select new UsersViewModel()
                                  {
                                      UserId = user.Id,
-                                     IdShortened = user.Id.Substring(0,10),
+                                     IdShortened = user.Id.Substring(0, 10),
                                      Name = user.Name,
                                      Birthday = user.Birthday.ToString(),
                                      PhoneNumber = user.PhoneNumber,
@@ -229,12 +283,78 @@ namespace MVC_TimeSh.Controllers
                                      UserName = user.UserName,
                                      DateCreated = user.DateCreated.ToString(),
                                      Role = role.Name
-                                 }).ToList();
-
+                                 });            
             if (usersWithRole == null)
                 return HttpNotFound();
 
-            return View(usersWithRole);
+            if(searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+            ViewBag.CurrentFilter = searchString;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                usersWithRole = usersWithRole.Where(
+                                    u => u.UserName.Contains(searchString)
+                                      || u.Email.Contains(searchString)
+                                      || u.Name.Contains(searchString));
+            }
+            switch (sortOrder)
+            {
+                case "IdSort":
+                    usersWithRole = usersWithRole.OrderBy(u => u.IdShortened);
+                    break;
+                case "IdSortDesc":
+                    usersWithRole = usersWithRole.OrderByDescending(u => u.IdShortened);
+                    break;
+                case "NameSort":
+                    usersWithRole = usersWithRole.OrderBy(u => u.Name);
+                    break;
+                case "NameSortDesc":
+                    usersWithRole = usersWithRole.OrderByDescending(u => u.Name);
+                    break;
+                case "BdaySort":
+                    usersWithRole = usersWithRole.OrderBy(u => u.Birthday);
+                    break;
+                case "BdaySortDesc":
+                    usersWithRole = usersWithRole.OrderByDescending(u => u.Birthday);
+                    break;
+                case "EmailSort":
+                    usersWithRole = usersWithRole.OrderBy(u => u.Email);
+                    break;
+                case "EmailSortDesc":
+                    usersWithRole = usersWithRole.OrderByDescending(u => u.Email);
+                    break;
+                case "UnameSort":
+                    usersWithRole = usersWithRole.OrderBy(u => u.UserName);
+                    break;
+                case "UnameSortDesc":
+                    usersWithRole = usersWithRole.OrderByDescending(u => u.UserName);
+                    break;
+                case "RoleSort":
+                    usersWithRole = usersWithRole.OrderBy(u => u.Role);
+                    break;
+                case "RoleSortDesc":
+                    usersWithRole = usersWithRole.OrderByDescending(u => u.Role);
+                    break;
+                case "CreateSortDesc":
+                    usersWithRole = usersWithRole.OrderByDescending(u => u.DateCreated);
+                    break;
+                default:
+                    usersWithRole = usersWithRole.OrderBy(u => u.DateCreated);
+                    break;
+            }
+
+            int pageSize = 10;
+            int pageNumber = (page ?? 1);
+
+            //return View(usersWithRole.ToList());
+            return View(usersWithRole.ToPagedList(pageNumber, pageSize));
         }
 
         // GET: /User/ChangePassword/{id}

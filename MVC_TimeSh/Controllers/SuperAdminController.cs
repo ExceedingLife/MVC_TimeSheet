@@ -13,7 +13,7 @@ using System.Net;
 
 namespace MVC_TimeSh.Controllers
 {
-    //[Authorize(Roles = "Admin, SuperAdmin")]
+    [Authorize(Roles = "Admin, SuperAdmin")]
     public class SuperAdminController : Controller
     {
         private ApplicationDbContext context;
@@ -534,7 +534,7 @@ namespace MVC_TimeSh.Controllers
                 return RedirectToAction("Dashboard", "SuperAdmin");
             }
         }
-
+        [Authorize(Roles = "Admin, SuperAdmin, Users, Developer")]
         public ActionResult ViewProjects()
         {
             var projectList = (from projects in context.Projects
