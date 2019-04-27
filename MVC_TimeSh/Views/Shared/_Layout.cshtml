@@ -86,7 +86,6 @@
                                 Add User
                             </a>
                         </li>
-
                     }
                     else if (User.IsInRole("Admin"))
                     {
@@ -108,7 +107,6 @@
                                 Add User
                             </a>
                         </li>
-
                     }
                     else if (User.IsInRole("User"))
                     {
@@ -178,7 +176,6 @@
                             Push Notification
                         </a>
                     </li>
-
                 </ul>
             </div>
         </nav>
@@ -241,6 +238,18 @@
             var sum = parseInt(p1d1) + parseInt(p1d2) + parseInt(p1d3) +
                 parseInt(p1d4) + parseInt(p1d5) + parseInt(p1d6) + parseInt(p1d7);
             $("#p1tot").val(sum);
+        }
+        function Proj2Tot() {
+            var p2d1 = $("#P1w2d1").val() || 0;
+            var p2d2 = $("#P1w2d2").val() || 0;
+            var p2d3 = $("#P1w2d3").val() || 0;
+            var p2d4 = $("#P1w2d4").val() || 0;
+            var p2d5 = $("#P1w2d5").val() || 0;
+            var p2d6 = $("#P1w2d6").val() || 0;
+            var p2d7 = $("#P1w2d7").val() || 0;
+            var sum2 = parseInt(p2d1) + parseInt(p2d2) + parseInt(p2d3) +
+                parseInt(p2d4) + parseInt(p2d5) + parseInt(p2d6) + parseInt(p2d7);
+            $("#p2tot").val(sum2);
         }
     </script>
     @RenderSection("scripts", required: false)

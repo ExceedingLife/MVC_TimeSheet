@@ -17,7 +17,7 @@ using PagedList;
 namespace MVC_TimeSh.Controllers
 {
     //[Authorize(Roles = "Users, Developer")]
-    [Authorize]
+    //[Authorize]
     public class UsersController : Controller
     {
         private ApplicationSignInManager _signInManager;
@@ -72,6 +72,9 @@ namespace MVC_TimeSh.Controllers
             
             var uid = User.Identity.GetUserId();
             ViewBag.CurrentId = uid;
+
+            var timeCount = context.TimeSheetMaster.Count();
+            ViewBag.TimeSheetCount = timeCount;
 
             return View();
         }
@@ -358,6 +361,7 @@ namespace MVC_TimeSh.Controllers
         }
 
         // GET: /User/ChangePassword/{id}
+        [Authorize]
         public ActionResult ChangePassword()
         {
             var user = User.Identity.GetUserName();

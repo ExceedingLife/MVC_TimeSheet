@@ -1,0 +1,96 @@
+﻿@model MVC_TimeSh.Models.TimeSheetDetailsModel
+@{
+    ViewBag.Title = "Edit TimeSheet Details";
+}
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success my-2">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Success: </strong> @TempData["Success"]
+    </div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger my-2">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Error: </strong> @TempData["Error"]
+    </div>
+}
+
+<h2>ViewBag.Title</h2>
+<div class="row justify-content-center">
+    <div class="col-sm-11 col-md-11 col-lg-11">
+        <div class="panel">
+            <div class="panel-heading text-center">
+                <h3><strong>Edit TimeSheet</strong></h3>
+            </div>
+            <div class="panel-body">
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    <div style="margin:10px"></div>
+                    <div class="row">
+                        <div class="col-md-2 col-lg-2">
+                            @Html.LabelFor(m => m.ProjectName)
+                        </div>
+                        <div class="col-md-1 col-lg-1">
+                            @Html.LabelFor(m => m.Sunday)
+                            <br />
+                            <label id="date1"></label>
+                        </div>
+                        <div class="col-md-1 col-lg-1">
+                            @Html.LabelFor(m => m.Monday)
+                            <br />
+                            <label id="date2"></label>
+                        </div>
+                        <div class="col-md-1 col-lg-1">
+                            @Html.LabelFor(m => m.Tuesday)
+                            <br />
+                            <label id="date3"></label>
+                        </div>
+                        <div class="col-md-1 col-lg-1">
+                            @Html.LabelFor(m => m.Wednesday)
+                            <br />
+                            <label id="date4"></label>
+                        </div>
+                        <div class="col-md-1 col-lg-1">
+                            @Html.LabelFor(m => m.Thursday)
+                            <br />
+                            <label id="date5"></label>
+                        </div>
+                        <div class="col-md-1 col-lg-1">
+                            @Html.LabelFor(m => m.Friday)
+                            <br />
+                            <label id="date6"></label>
+                        </div>
+                        <div class="col-md-1 col-lg-1">
+                            @Html.LabelFor(m => m.Saturday)
+                            <br />
+                            <label id="date7"></label>
+                        </div>
+                        <div class="col-md-1 col-lg-1">
+                            @Html.Label("Total")
+                            <br />
+                            @Html.Label("Hours")
+                        </div>
+                        <div class="col-md-2 col-lg-2">
+                            @Html.Label("Description")
+                        </div>
+                    </div>
+                    <div style="margin:10px"></div>
+                    <div class="row">
+                        <div class="col-md-2 form-group">
+                            
+
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

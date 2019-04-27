@@ -1,0 +1,117 @@
+﻿@model IEnumerable<MVC_TimeSh.Models.TimeSheetMasterModel>
+@{
+    ViewBag.Title = "User TimeSheets";
+}
+
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success my-2">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Success: </strong> @TempData["Success"]
+    </div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger my-2">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Error: </strong> @TempData["Error"]
+    </div>
+}
+
+<div class="row">
+    <div class="col-sm-10 col-md-10 col-lg-10">
+        <div class="panel">
+            <div class="panel-heading panel-default text-center">
+                <h3>Your TimeSheets</h3>
+
+                    @Html.ActionLink("Create New TimeSheet", "AddTimeSheet", "TimeSheet",
+                     null, new { @class = "btn btn-primary pull-left" })
+            </div>
+            <div class="panel-body">
+                <table class="table table-bordered table-hover
+                       table-responsive table-striped">
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.IdShortened)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.FromDate)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ToDate)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.TotalHours)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.DateCreated)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.TimeSheetStatus)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Comment)
+                        </th>
+                        <th>
+                            Details
+                        </th>
+                        <th>
+                            Delete
+                        </th>
+                    </tr>
+
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.IdShortened)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.FromDate)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ToDate)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TotalHours)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DateCreated)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TimeSheetStatus)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Comment)
+                            </td>
+                            <td>
+                                @Html.ActionLink("Details", "UserTimeDetails", 
+                                 new { uid = item.UserId, tid = item.TimeSheetMasterId }, 
+                                 new { @class = "btn btn-info" })
+                            </td>
+                            <td>
+                                @using(Html.BeginForm("DeleteTimeSheet", "TimeSheet",
+                                    new { masterId = item.TimeSheetMasterId }, FormMethod.Post,
+                                    new { @onclick = "return confirm('Delete Confirmation?')" }))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <input type="submit" value="Delete" class="btn btn-danger" />
+                                }
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
+            <div class="panel-footer">
+                <div class="pull-left">
+                    Showing # to # of # entries
+
+                </div>
+                <div class="pull-right">
+                    <h5>Pagination to do</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -63,6 +63,9 @@ namespace MVC_TimeSh.Controllers
             var roleCount = context.Roles.Count();
             ViewBag.RolesCount = roleCount;
 
+            var timeCount = context.TimeSheetMaster.Count();
+            ViewBag.TimeSheetCount = timeCount;
+
             return View();
         }
 

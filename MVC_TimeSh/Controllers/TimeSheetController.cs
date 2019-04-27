@@ -74,6 +74,104 @@ namespace MVC_TimeSh.Controllers
             return View(timeSheets);
         }
 
+        //GET: /TimeSheet/UserTimeSheets/{id}
+        public async Task<ActionResult> UserTimeSheets(string id)
+        {
+            var userTimeSheets = (from times in context.TimeSheetMaster
+                                  where times.UserId == id
+                                  select new TimeSheetMasterModel()
+                                  {
+                                      TimeSheetMasterId = times.TimeSheetMasterId,
+                                      FromDate = ((DateTime)times.FromDate),
+                                      ToDate = ((DateTime)times.ToDate),
+                                      TimeSheetStatus = times.TimeSheetStatus,
+                                      TotalHours = times.TotalHours,
+                                      Comment = times.Comment,
+                                      DateCreated = ((DateTime)times.DateCreated),
+                                      UserId = times.UserId.ToString(),
+                                      IdShortened = times.UserId.Substring(0,10)
+                                  });
+            if (userTimeSheets == null)
+                return HttpNotFound();
+
+            return View(await userTimeSheets.ToListAsync());
+        }
+        //GET: /TimeSheet/UserTimeDetails/{uid}{tid}
+        public async Task<ActionResult> UserTimeDetails(string uid, int tid)
+        {
+            var tmaster = await context.TimeSheetMaster.Where(t =>
+                          t.TimeSheetMasterId == tid).FirstOrDefaultAsync();
+            var tdetail = await context.TimeSheetDetails.Where(t => 
+                          t.TimeSheetMasterId == tmaster.TimeSheetMasterId).FirstOrDefaultAsync();
+            var project = await context.Projects.Where(p => 
+                          p.ProjectId == tdetail.ProjectId).FirstOrDefaultAsync();
+
+            var userTimeDetails = (from t in context.TimeSheetMaster
+                                   join d in context.TimeSheetDetails
+                                   on t.TimeSheetMasterId equals d.TimeSheetMasterId
+                                   where t.UserId == uid
+                                   select new TimeSheetDetailsModel()
+                                   {
+                                       TimeSheetMasterId = t.TimeSheetMasterId,
+                                       Sunday = d.Sunday,
+                                       Monday = d.Monday,
+                                       Tuesday = d.Tuesday,
+                                       Wednesday = d.Wednesday,
+                                       Thursday = d.Thursday,
+                                       Friday = d.Friday,
+                                       Saturday = d.Saturday,
+                                       Hours = t.TotalHours,
+                                       ProjectName = project.ProjectName,
+                                       ProjectId = project.ProjectId,
+                                       UserId = t.UserId,
+                                       Comment = t.Comment
+                                   });
+            if (userTimeDetails == null)
+                return HttpNotFound();
+
+            return View(await userTimeDetails.FirstOrDefaultAsync());
+        }
+        //GET: /TimeSheet/UserEditTimeSheet/{uid}{mid}{did}
+        public async Task<ActionResult> UserEditTimeSheet(string uid, int did)
+        {
+            //var tmaster = await context.TimeSheetMaster.Where(t =>
+            //              t.TimeSheetMasterId == mid).FirstOrDefaultAsync();
+            //var tdetail = await context.TimeSheetDetails.Where(t =>
+            //              t.TimeSheetMasterId == tmaster.TimeSheetMasterId).FirstOrDefaultAsync();
+            //var project = await context.Projects.Where(p =>
+            //              p.ProjectId == tdetail.ProjectId).FirstOrDefaultAsync();
+
+            var td = await context.TimeSheetDetails.Where(t => 
+                           t.TimeSheetId == did).FirstOrDefaultAsync();
+            var proj = await context.Projects.Where(p => 
+                             p.ProjectId == td.ProjectId).FirstOrDefaultAsync();
+
+            var timeSheet = (from t in context.TimeSheetMaster
+                             join d in context.TimeSheetDetails
+                             on t.TimeSheetMasterId equals d.TimeSheetMasterId
+                             where d.TimeSheetId == did
+                             select new TimeSheetDetailsModel()
+                             {
+                                 TimeSheetMasterId = t.TimeSheetMasterId,
+                                 Sunday = d.Sunday,
+                                 Monday = d.Monday,
+                                 Tuesday = d.Tuesday,
+                                 Wednesday = d.Wednesday,
+                                 Thursday = d.Thursday,
+                                 Friday = d.Friday,
+                                 Saturday = d.Saturday,
+                                 Hours = t.TotalHours,
+                                 ProjectName = proj.ProjectName,
+                                 ProjectId = proj.ProjectId,
+                                 UserId = t.UserId,
+                                 Comment = t.Comment
+                             });
+            if (timeSheet == null)
+                return HttpNotFound();
+
+            return View(await timeSheet.FirstOrDefaultAsync());
+        }
+
         // GET: /TimeSheet/AddTimeSheet
         public ActionResult AddTimeSheet()
         {
@@ -96,22 +194,20 @@ namespace MVC_TimeSh.Controllers
                 {
                     return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
                 }
-                //if (ModelState.IsValid)
-                //{
-                    TimeSheetMaster masterModel = new TimeSheetMaster();
-                    masterModel.FromDate = timeSheetModel.Proj1;
-                    masterModel.ToDate = timeSheetModel.Proj1.AddDays(7);
-                    /* NEED HRS 4 WEEK/END MONTH/NEW MONTH */
+                //if (ModelState.IsValid) {
+                TimeSheetMaster masterModel = new TimeSheetMaster();
+                masterModel.FromDate = timeSheetModel.Proj1;
+                masterModel.ToDate = timeSheetModel.Proj1.AddDays(7);
+                /* NEED HRS 4 WEEK/END MONTH/NEW MONTH */
 
-                    masterModel.TotalHours = timeSheetModel.ProjTotal1;
-                    masterModel.UserId = User.Identity.GetUserId();
-                    masterModel.DateCreated = DateTime.Now;
-                    /* MONTH SUBMITTED */
+                masterModel.TotalHours = timeSheetModel.ProjTotal1;
+                masterModel.UserId = User.Identity.GetUserId();
+                masterModel.DateCreated = DateTime.Now;
+                /* MONTH SUBMITTED */
 
-                    masterModel.TimeSheetStatus = 1;
-                    masterModel.Comment = timeSheetModel.ProjDesc1;
-                    context.TimeSheetMaster.Add(masterModel);
-
+                masterModel.TimeSheetStatus = 1;
+                masterModel.Comment = timeSheetModel.ProjDesc1;
+                context.TimeSheetMaster.Add(masterModel);
                 //var detailsModel = CreateTimeSheetDetails(masterModel, timeSheetModel);
                 //context.TimeSheetDetails.Add(detailsModel);
                 /*  possible way to insert multiple records with ID
@@ -119,15 +215,30 @@ namespace MVC_TimeSh.Controllers
                  *  context.Clients.Add(client);
                  *  clientDetails.ClientId = client.Id;
                  *  context.ClientDetails.Add(clientDetails);
-                 *  context.SaveChanges();
-                 */
+                 *  context.SaveChanges();      */                 
                 context.SaveChanges();
                     TempData["SuccessMaster"] = "TimeSheetMaster Created Successfully";
-
                     //Create TimeSheetDetails
-                    CreateTimeSheetDetails(masterModel, timeSheetModel);                  
-                    
+                    CreateTimeSheetDetails(masterModel, timeSheetModel);
+
+                /*  Need to add seperate Dates to each Project */
+                TimeSheetMaster masterModel2 = new TimeSheetMaster();
+                masterModel2.FromDate = timeSheetModel.Proj1;
+                masterModel2.ToDate = timeSheetModel.Proj1.AddDays(7);
+                masterModel2.TotalHours = timeSheetModel.ProjTotal2;
+                masterModel2.UserId = User.Identity.GetUserId();
+                masterModel2.DateCreated = DateTime.Now;
+                masterModel2.TimeSheetStatus = 1;
+                masterModel2.Comment = timeSheetModel.ProjDesc2;
+                if(masterModel2.TotalHours != null)
+                {
+                    context.TimeSheetMaster.Add(masterModel2);
+                    context.SaveChanges();
+                    TempData["SuccessMaster"] = "2 TimeSheetMasters have been created Successfully";
+                    Create2ndTimeSheetDetails(masterModel2, timeSheetModel);
+                }
                     return RedirectToAction("TimeSheetList", "TimeSheet");
+
                 //}
                // TempData["Error"] = "TimeSheet Create Was Unsuccessful";
                // return RedirectToAction("TimeSheetList", "TimeSheet");
@@ -164,7 +275,7 @@ namespace MVC_TimeSh.Controllers
                 detailsModel.Wednesday = projectsModel.P1w1d4;
                 detailsModel.Thursday = projectsModel.P1w1d5;
                 detailsModel.Friday = projectsModel.P1w1d6;
-                detailsModel.Sunday = projectsModel.P1w1d7;
+                detailsModel.Saturday = projectsModel.P1w1d7;
 
                 context.TimeSheetDetails.Add(detailsModel);
                 context.SaveChanges();
@@ -178,6 +289,36 @@ namespace MVC_TimeSh.Controllers
                 TempData["ErrorDetails"] = "TimeSheetDetails Created Unsuccessful";
                 //return RedirectToAction("TimeSheetList", "TimeSheet");
             }        
+        }
+        /* Created off TimeSheetMaster ~ TimeSheetDetails */
+        public void Create2ndTimeSheetDetails(TimeSheetMaster master,
+               TimeSheetProjectsModel projectsModel)
+        {   // METHOD FOR CREATING A 2ND TIMESHEETDETAIL RECORD
+            try
+            {
+                var detailsModel2 = new TimeSheetDetails();
+                detailsModel2.Hours = master.TotalHours;
+                /* PERIOD */
+                detailsModel2.ProjectId = (int)projectsModel.ProjectId2;
+                detailsModel2.UserId = master.UserId;
+                detailsModel2.DateCreated = master.DateCreated;
+                detailsModel2.TimeSheetMasterId = master.TimeSheetMasterId;
+                detailsModel2.Sunday = Convert.ToInt32(projectsModel.P1w2d1);
+                detailsModel2.Monday = Convert.ToInt32(projectsModel.P1w2d2);
+                detailsModel2.Tuesday = Convert.ToInt32(projectsModel.P1w2d3);
+                detailsModel2.Wednesday = Convert.ToInt32(projectsModel.P1w2d4);
+                detailsModel2.Thursday = Convert.ToInt32(projectsModel.P1w2d5);
+                detailsModel2.Friday = Convert.ToInt32(projectsModel.P1w2d6);
+                detailsModel2.Saturday = Convert.ToInt32(projectsModel.P1w2d7);
+                context.TimeSheetDetails.Add(detailsModel2);
+                context.SaveChanges();
+                TempData["SuccessDetails"] = "2 TimeSheetDetails Created Successfully";
+            }
+            catch (Exception ex)
+            {
+                Console.Write(ex.Message);
+                TempData["ErrorDetails"] = "The 2nd TimeSheetDetail Created Unsuccessfully";
+            }
         }
 
         /*  CREATE METHOD TO CHECK DATE WEEK FOR USER   */
@@ -245,7 +386,7 @@ namespace MVC_TimeSh.Controllers
             {
                 context.TimeSheetDetails.Remove(timeSheetDetails);
                 context.TimeSheetMaster.Remove(timeSheetMaster);
-                context.SaveChangesAsync();
+                context.SaveChanges();
                 TempData["SuccessMaster"] = "TimeSheet Master Deleted Successfully";
                 TempData["SuccessDetails"] = "TimeSheet Details Deleted Successfully";
                 return RedirectToAction("TimeSheetList");
@@ -257,6 +398,56 @@ namespace MVC_TimeSh.Controllers
                 return RedirectToAction("TimeSheetList");
             }
         }
+        [HttpPost, ActionName("DeleteTimeSh")]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteTimeData(int mid, int did)
+        {
+            if(mid < 0 || did < 0)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var masterData = context.TimeSheetMaster.Where(t =>
+                t.TimeSheetMasterId.Equals(mid)).FirstOrDefault();
+            var detailData = context.TimeSheetDetails.Where(t =>
+                t.TimeSheetMasterId.Equals(mid) && t.TimeSheetId.Equals(did))
+                .FirstOrDefault();
+            if(masterData == null)
+            {
+                TempData["ErrorMaster"] = "TimeSheet Master Delete was Unsuccessful";
+                return RedirectToAction("UserTimeDetails");
+            }
+            if(detailData == null)
+            {
+                TempData["ErrorDetails"] = "TimeSheet Details Delete was Unsuccessful";
+                return RedirectToAction("TimeSheetList");
+            }
+            try
+            {
+                context.TimeSheetDetails.Remove(detailData);
+                context.SaveChanges();
+                TempData["SuccessDetails"] = "TimeSheet Details Deleted Successfully";
+                var chk = context.TimeSheetDetails.Where(x => 
+                          x.TimeSheetMasterId.Equals(mid)).FirstOrDefault();
+                if(chk == null)
+                {
+                    context.TimeSheetMaster.Remove(masterData);
+                    context.SaveChanges();
+                    TempData["SuccessMaster"] = "TimeSheet Master Deleted Successfully";
+                    return RedirectToAction("UserTimeDetails");
+                }
+                else
+                {
+                    return RedirectToAction("UserTimeDetails");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.Write(ex.Message);
+                TempData["Error"] = "TimeSheet Delete was Unsuccessful";
+                return RedirectToAction("UserTimeDetails");
+            }
+        }
+
 
         /* To-do: Join on User + TimeSheet but currently not enouph timesheets */
         // GET: TimeSheet/ExportTimeSheetToExcel

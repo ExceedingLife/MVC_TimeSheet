@@ -33,15 +33,15 @@
                         <span class="glyphicon glyphicon-time" style="font-size: 7em;"></span>
                     </div>
                     <div class="col-xs-9 text-right">
-                        <h1>@ViewBag.UsersCount</h1>
+                        <h1>@ViewBag.TimeSheetCount</h1>
                         <h3>Timesheet</h3>
                         <h4>Submitted Count</h4>
                     </div>
                 </div>
             </div>
-            <a href="@Url.Action("UsersTable", "Users")">
+            <a href="@Url.Action("UserTimeSheets", "TimeSheet", new { id = ViewBag.CurrentId })">
                 <div class="panel-footer">
-                    <span class="pull-left">View Details</span>
+                    <span class="pull-left">View TimeSheets</span>
                     <span class="pull-right glyphicon glyphicon-circle-arrow-right"></span>
                     <div class="clearfix"></div>
                 </div>
@@ -57,13 +57,13 @@
                         <span class="glyphicon glyphicon-time" style="font-size: 7em;"></span>
                     </div>
                     <div class="col-xs-9 text-right">
-                        <h1>@ViewBag.UsersCount</h1>
+                        <h1>@ViewBag.TimeSheetCount</h1>
                         <h3>Timesheet</h3>
                         <h4>Approved Count</h4>
                     </div>
                 </div>
             </div>
-            <a href="@Url.Action("UsersTable", "Users")">
+            <a href="@Url.Action("UserTimeSheets", "TimeSheet", new { id = ViewBag.CurrentId })">
                 <div class="panel-footer">
                     <span class="pull-left">View Details</span>
                     <span class="pull-right glyphicon glyphicon-circle-arrow-right"></span>
@@ -81,13 +81,13 @@
                         <span class="glyphicon glyphicon-time" style="font-size: 7em;"></span>
                     </div>
                     <div class="col-xs-9 text-right">
-                        <h1>@ViewBag.UsersCount</h1>
+                        <h1>@ViewBag.TimeSheetCount</h1>
                         <h3>Timesheet</h3>
                         <h4>Rejected Count</h4>
                     </div>
                 </div>
             </div>
-            <a href="@Url.Action("UsersTable", "Users")">
+            <a href="@Url.Action("UserTimeSheets", "TimeSheet", new { id = ViewBag.CurrentId })">
                 <div class="panel-footer">
                     <span class="pull-left">View Details</span>
                     <span class="pull-right glyphicon glyphicon-circle-arrow-right"></span>

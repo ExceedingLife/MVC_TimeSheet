@@ -281,14 +281,8 @@ namespace MVC_TimeSh.Models
         [Display(Name = "Time Sheet Master ID")]
         public int TimeSheetMasterId { get; set; }
         [Required]
-        //[DataType(DataType.Date),
-         //DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}",
-         //ApplyFormatInEditMode = true)]
         [Display(Name = "Start Date")]
         public DateTime FromDate { get; set; }        
-        //[DataType(DataType.Date),
-        // DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}",
-        // ApplyFormatInEditMode = true)]
         [Required]
         [Display(Name = "End Date")]
         public DateTime ToDate { get; set; }
@@ -296,10 +290,9 @@ namespace MVC_TimeSh.Models
         public int? TotalHours { get; set; }
         [Required]
         [Display(Name = "User ID")]
-        public string UserId { get; set; }        
-        //[DataType(DataType.Date),
-        // DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}",
-        // ApplyFormatInEditMode = true)]
+        public string UserId { get; set; }
+        [Display(Name = "User ID")]
+        public string IdShortened { get; set; }
         [Display(Name = "Date Created")]
         public DateTime DateCreated { get; set; }
         [Display(Name = "Month Submitted")]
@@ -393,10 +386,6 @@ namespace MVC_TimeSh.Models
     }
     public class TimeSheetProjectsModel
     {
-        
-        //[DataType(DataType.Date),
-        // DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}",
-        // ApplyFormatInEditMode = true)]
         [Required]
         public DateTime Proj1 { get; set; }
 
