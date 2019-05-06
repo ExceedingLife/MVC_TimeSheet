@@ -1,4 +1,7 @@
-﻿@model IEnumerable<MVC_TimeSh.Models.TimeSheetMasterModel>
+﻿@*@model IEnumerable<MVC_TimeSh.Models.TimeSheetMasterModel>*@
+@model PagedList.IPagedList<MVC_TimeSh.Models.TimeSheetMasterModel>
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 @{
     ViewBag.Title = "All TimeSheets";
 }
@@ -57,22 +60,28 @@
                        table-responsive table-striped">
                     <tr>
                         <th>
-                            @Html.DisplayNameFor(model => model.FromDate)
+                            @Html.DisplayName("Start Date")
+                            @*@Html.DisplayNameFor(model => model.FromDate)*@
                         </th>
                         <th>
-                            @Html.DisplayNameFor(model => model.ToDate)
+                            @Html.DisplayName("End Date")
+                            @*@Html.DisplayNameFor(model => model.ToDate)*@
                         </th>
                         <th>
-                            @Html.DisplayNameFor(model => model.TotalHours)
+                            @Html.DisplayName("Total Hours")
+                            @*@Html.DisplayNameFor(model => model.TotalHours)*@
                         </th>
                         <th>
-                            @Html.DisplayNameFor(model => model.DateCreated)
+                            @Html.DisplayName("Date Created")
+                            @*@Html.DisplayNameFor(model => model.DateCreated)*@
                         </th>
                         <th>
-                            @Html.DisplayNameFor(model => model.TimeSheetStatus)
+                            @Html.DisplayName("Status")
+                            @*@Html.DisplayNameFor(model => model.TimeSheetStatus)*@
                         </th>
                         <th>
-                            @Html.DisplayNameFor(model => model.Comment)
+                            @Html.DisplayName("Comment")
+                            @*@Html.DisplayNameFor(model => model.Comment)*@
                         </th>
                         <th>
                             Details
@@ -127,11 +136,12 @@
             </div>
             <div class="panel-footer">
                 <div class="pull-left">
-                    Showing # to # of # entries
-
+                    @*Showing # to # of # entries*@
+                    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
                 </div>
                 <div class="pull-right">
-                    <h5>Pagination to do</h5>
+                    <h5>@*Pagination to do*@</h5>
+                    @Html.PagedListPager(Model, page => Url.Action("TimeSheetList", new { page }))
                 </div>
             </div>
         </div>

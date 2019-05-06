@@ -3,26 +3,13 @@
     ViewBag.Title = "TimeSheet Details";
 }
 
-
-@if(User.IsInRole("SuperAdmin") || User.IsInRole("Admin"))
-{
-    <h2>User TimeSheet Details</h2>
-}
-else
-{
-    <h2>Your TimeSheet Details</h2> 
-}
-
+<h2>Details</h2>
 <div class="row">
-    <div class="col-sm-10 col-md-10 col-lg-10">
+    <div class="col-sm-10 col-md-10 col-lg-10 justify-content-center">
         <div class="panel">
             <div class="panel-heading">
-                @Html.ActionLink("TimeSheet List", "UserTimeSheets",
-                 "TimeSheet", new { id = Model.UserId }, new { @class = "btn btn-info" }) |
-                @*    , did = Model.TimeSheetId  *@
-                @Html.ActionLink("Edit Details", "UserEditTimeSheet",
-                 new { uid = Model.UserId, mid = Model.TimeSheetMasterId },
-                 new { @class = "btn btn-primary" })
+                @Html.ActionLink("Admin Time Menu", "AdminTimeMenu", 
+                "TimeSheet", null , new { @class = "btn btn-primary" })
             </div>
             <div class="panel-body">
                 <table class="table table-responsive table-bordered" style="border: 1px solid black;">
@@ -82,14 +69,41 @@ else
                                 @Html.DisplayFor(m => m.Hours)
                             </td>
                             <td>
-                                @Html.DisplayFor(m => m.Comment)
+                                @Html.DisplayFor(m => m.Comment)                                
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
             <div class="panel-footer">
+                <div class="panel">
+                    <div class="panel-heading">
+                        <p>TimeSheet Description</p>
+                    </div>
+                    @using (Html.BeginForm("AdminApproval", "TimeSheet", FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(m => m.TimeSheetMasterId)
+                        @Html.HiddenFor(m => m.TimeSheetId)
+                        @Html.HiddenFor(m => m.UserId)
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <strong>@Html.LabelFor(m => m.Comment)</strong>
+                                @Html.TextAreaFor(m => m.Comment, new { @class="form-control",
+                                @maxlength ="100", @rows="2" })
+                            </div>
+                        </div>
+                        <div class="panel-footer">
+                            <input type="submit" class="btn btn-danger" value="Reject" name="response"
+                                   formaction="@Url.Action("RejectTimeSheet")" formmethod="post" />
 
+                            <input type="submit" class="btn btn-success" value="Approve" name="response"
+                                   formaction="@Url.Action("ApproveTimeSheet")" formmethod="post" />
+
+                            @*<input type="submit" value="Approve" name="TimeStat" />*@
+                        </div>
+                    }                    
+                </div>
             </div>
         </div>
     </div>

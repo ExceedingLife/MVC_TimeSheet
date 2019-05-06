@@ -1,10 +1,6 @@
 ﻿@model IEnumerable<MVC_TimeSh.Models.TimeSheetMasterModel>
-@*@model PagedList.IPagedList<MVC_TimeSh.Models.TimeSheetMasterModel>
-@using PagedList.Mvc;
-<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />*@
-
 @{
-    ViewBag.Title = "User TimeSheets";
+    ViewBag.Title = "Admin Time Menu";
 }
 
 @if (TempData["Success"] != null)
@@ -22,59 +18,53 @@
     </div>
 }
 
+<h2>Administrator TimeSheet Menu</h2>
 <div class="row">
     <div class="col-sm-10 col-md-10 col-lg-10">
         <div class="panel">
             <div class="panel-heading panel-default text-center">
-                @if (TempData["PanelHeader"] != null)
+                @if(TempData["PanelHeader"] != null)
                 {
                     <h4>@TempData["PanelHeader"]</h4>
                 }
                 else
                 {
-                    <h4>Your TimeSheets</h4>
-                }
+                    <h4>All TimeSheets</h4>
+                }                
                 <div class="pull-left">
                     @Html.ActionLink("Create New TimeSheet", "AddTimeSheet", "TimeSheet",
-                                      null, new { @class = "btn btn-primary" })
+                                     null, new { @class = "btn btn-primary " })
                 </div>
                 <div class="pull-right">
-                    @Html.ActionLink("Dashboard", "UserDashboard", "Users",
-                                      null, new { @class = "btn btn-info" })
+                    @Html.ActionLink("Admin Dashboard", "Dashboard", "Admin",
+                                     null, new { @class = "btn btn-info " })
                 </div>
                 <br />
             </div>
             <div class="panel-body">
                 <table class="table table-bordered table-hover
-                       table-responsive table-striped" id="table">
+                       table-responsive table-striped">
                     <tr>
                         <th>
-                            @Html.DisplayName("User ID")
-                            @*@Html.DisplayNameFor(model => model.IdShortened)*@
+                            @Html.DisplayNameFor(model => model.IdShortened)
                         </th>
                         <th>
-                            @Html.DisplayName("Start Date")
-                            @*@Html.DisplayNameFor(model => model.FromDate)*@
+                            @Html.DisplayNameFor(model => model.FromDate)
                         </th>
                         <th>
-                            @Html.DisplayName("End Date")
-                            @*@Html.DisplayNameFor(model => model.ToDate)*@
+                            @Html.DisplayNameFor(model => model.ToDate)
                         </th>
                         <th>
-                            @Html.DisplayName("Total Hours")
-                            @*@Html.DisplayNameFor(model => model.TotalHours)*@
+                            @Html.DisplayNameFor(model => model.TotalHours)
                         </th>
                         <th>
-                            @Html.DisplayName("Date Created")
-                            @*@Html.DisplayNameFor(model => model.DateCreated)*@
+                            @Html.DisplayNameFor(model => model.DateCreated)
                         </th>
                         <th>
-                            @Html.DisplayName("Status")
-                            @*@Html.DisplayNameFor(model => model.TimeSheetStatus)*@
+                            @Html.DisplayNameFor(model => model.TimeSheetStatus)
                         </th>
                         <th>
-                            @Html.DisplayName("Comment")
-                            @*@Html.DisplayNameFor(model => model.Comment)*@
+                            @Html.DisplayNameFor(model => model.Comment)
                         </th>
                         <th>
                             Details
@@ -109,8 +99,9 @@
                                 @Html.DisplayFor(modelItem => item.Comment)
                             </td>
                             <td>
-                                @Html.ActionLink("Details", "UserTimeDetails",
-                                 new { uid = item.UserId, tid = item.TimeSheetMasterId },
+                                @Html.ActionLink("Details", "AdminApproval",
+                                 new { masterId = item.TimeSheetMasterId },
+                                 //new { uid = item.UserId, tid = item.TimeSheetMasterId },
                                  new { @class = "btn btn-info" })
                             </td>
                             <td>
@@ -127,29 +118,7 @@
                 </table>
             </div>
             <div class="panel-footer">
-                <div class="pull-left">
-                    @*Showing # to # of # entries*@
-                    @*Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount*@
-                </div>
-                <div class="pull-right">
-                    
-                    @*@if(TempData["methodCall"] != null && TempData["methodCall"].Equals(1))
-                    {
-                        @Html.PagedListPager(Model, page => Url.Action("UserApproveTimes", new { page }))
-                    }
-                    else
-                    {
-                    }*@
-                        @*@Html.PagedListPager(Model, page => Url.Action("UserTimeSheets", new { page }))*@
-
-                    @* }*@
-                    @*@Html.PagedListPager(Model, page => Url.Action("UserTimeSheets", new {id=ViewBag.CurrentId, page = page}),
-                        PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(new AjaxOptions()
-                        {
-                            HttpMethod = "GET",
-                            UpdateTargetId = "table"
-                        }))*@
-                </div>
+                
             </div>
         </div>
     </div>

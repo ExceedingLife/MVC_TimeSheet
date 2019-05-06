@@ -73,8 +73,17 @@ namespace MVC_TimeSh.Controllers
             var uid = User.Identity.GetUserId();
             ViewBag.CurrentId = uid;
 
-            var timeCount = context.TimeSheetMaster.Count();
+            var timeCount = context.TimeSheetMaster.Where(m => 
+                m.UserId == uid).Count();
             ViewBag.TimeSheetCount = timeCount;
+
+            var approvalCount = context.TimeSheetMaster.Where(m =>
+                m.TimeSheetStatus == 2 && m.UserId == uid).Count();
+            ViewBag.TimeApproveCount = approvalCount;
+
+            var rejectCount = context.TimeSheetMaster.Where(m =>
+                m.TimeSheetStatus == 0 && m.UserId == uid).Count();
+            ViewBag.TimeRejectCount = rejectCount;
 
             return View();
         }

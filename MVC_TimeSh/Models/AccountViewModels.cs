@@ -590,6 +590,11 @@ namespace MVC_TimeSh.Models
         public int? ProjectId5 { get; set; }
         public int? ProjectId6 { get; set; }
         public int? ProjectId7 { get; set; }
+
+        public int TimeMasterId { get; set; }
+        public int TimeDetailsId { get; set; }
+        public string UserId { get; set; }
+        public string IdShortened { get; set; }
     }
 
 }

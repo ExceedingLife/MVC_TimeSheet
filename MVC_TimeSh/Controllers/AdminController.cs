@@ -32,7 +32,6 @@ namespace MVC_TimeSh.Controllers
             context = new ApplicationDbContext();
         }
 
-
         public ApplicationSignInManager SignInManager
         {
             get
@@ -65,6 +64,14 @@ namespace MVC_TimeSh.Controllers
 
             var timeCount = context.TimeSheetMaster.Count();
             ViewBag.TimeSheetCount = timeCount;
+
+            var approvalCount = context.TimeSheetMaster.Where(m => 
+                m.TimeSheetStatus == 2).Count();
+            ViewBag.TimeApproveCount = approvalCount;
+
+            var rejectCount = context.TimeSheetMaster.Where(m =>
+                m.TimeSheetStatus == 0).Count();
+            ViewBag.TimeRejectCount = rejectCount;
 
             return View();
         }

@@ -57,13 +57,13 @@
                         <span class="glyphicon glyphicon-time" style="font-size: 7em;"></span>
                     </div>
                     <div class="col-xs-9 text-right">
-                        <h1>@ViewBag.TimeSheetCount</h1>
+                        <h1>@ViewBag.TimeApproveCount</h1>
                         <h3>Timesheet</h3>
                         <h4>Approved Count</h4>
                     </div>
                 </div>
             </div>
-            <a href="@Url.Action("UserTimeSheets", "TimeSheet", new { id = ViewBag.CurrentId })">
+            <a href="@Url.Action("UserApproveTimes", "TimeSheet", new { userid = ViewBag.CurrentId })">
                 <div class="panel-footer">
                     <span class="pull-left">View Details</span>
                     <span class="pull-right glyphicon glyphicon-circle-arrow-right"></span>
@@ -81,13 +81,13 @@
                         <span class="glyphicon glyphicon-time" style="font-size: 7em;"></span>
                     </div>
                     <div class="col-xs-9 text-right">
-                        <h1>@ViewBag.TimeSheetCount</h1>
+                        <h1>@ViewBag.TimeRejectCount</h1>
                         <h3>Timesheet</h3>
                         <h4>Rejected Count</h4>
                     </div>
                 </div>
             </div>
-            <a href="@Url.Action("UserTimeSheets", "TimeSheet", new { id = ViewBag.CurrentId })">
+            <a href="@Url.Action("UserRejectTimes", "TimeSheet", new { userid = ViewBag.CurrentId })">
                 <div class="panel-footer">
                     <span class="pull-left">View Details</span>
                     <span class="pull-right glyphicon glyphicon-circle-arrow-right"></span>
@@ -98,6 +98,7 @@
     </div>
 </div>
 <br />
+@*
 <div class="row">
     <!--    ROW 2 SECTION 1   -->
     <div class="col-lg-3 col-md-6">
@@ -172,7 +173,7 @@
         </div>
     </div>
 </div>
-<br />
+<br />*@
 <div class="row">
     <!--    ROW 3 SECTION 1     -->
     <div class="col-lg-3 col-md-6">

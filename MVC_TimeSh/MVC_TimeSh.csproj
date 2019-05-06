@@ -390,6 +390,8 @@
     <Content Include="Views\TimeSheet\UserTimeSheets.cshtml" />
     <Content Include="Views\TimeSheet\UserTimeDetails.cshtml" />
     <Content Include="Views\TimeSheet\UserEditTimeSheet.cshtml" />
+    <Content Include="Views\TimeSheet\AdminTimeMenu.cshtml" />
+    <Content Include="Views\TimeSheet\AdminApproval.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

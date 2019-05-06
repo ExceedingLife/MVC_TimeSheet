@@ -4,7 +4,9 @@ using System.Net;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Data;
 using System.Data.Entity;
+using System.Data.SqlClient;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Microsoft.AspNet.Identity;
@@ -13,6 +15,8 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using MVC_TimeSh.Models;
 using Excel = Microsoft.Office.Interop.Excel;
 using System.Drawing;
+using PagedList;
+
 
 namespace MVC_TimeSh.Controllers
 {
@@ -54,7 +58,7 @@ namespace MVC_TimeSh.Controllers
         }
 
         // GET: TimeSheetList
-        public ActionResult TimeSheetList()
+        public ActionResult TimeSheetList(int? page)
         {
             var timeSheets = (from times in context.TimeSheetMaster
                               select new TimeSheetMasterModel()
@@ -71,12 +75,18 @@ namespace MVC_TimeSh.Controllers
             if (timeSheets == null)
                 return HttpNotFound();
 
-            return View(timeSheets);
+            int pageSize = 8;
+            int pageNumber = (page ?? 1);
+            return View(timeSheets.ToPagedList(pageNumber, pageSize));
+            //return View(timeSheets);
         }
 
         //GET: /TimeSheet/UserTimeSheets/{id}
+        [Authorize]
+        //public async Task<ActionResult> UserTimeSheets(string id, int? page)
         public async Task<ActionResult> UserTimeSheets(string id)
         {
+            ViewBag.CurrentId = id;
             var userTimeSheets = (from times in context.TimeSheetMaster
                                   where times.UserId == id
                                   select new TimeSheetMasterModel()
@@ -89,14 +99,23 @@ namespace MVC_TimeSh.Controllers
                                       Comment = times.Comment,
                                       DateCreated = ((DateTime)times.DateCreated),
                                       UserId = times.UserId.ToString(),
-                                      IdShortened = times.UserId.Substring(0,10)
+                                      IdShortened = times.UserId.Substring(0, 10)
                                   });
+                                    //.ToList();
             if (userTimeSheets == null)
                 return HttpNotFound();
-
+            //int pageSize = 3;
+            //int pageNumber = (page ?? 1);
+            TempData["PanelHeader"] = "Your TimeSheets";
+            //return View(userTimeSheets.ToPagedList(pageNumber, pageSize));
             return View(await userTimeSheets.ToListAsync());
         }
+       
+
+
+
         //GET: /TimeSheet/UserTimeDetails/{uid}{tid}
+        [Authorize]
         public async Task<ActionResult> UserTimeDetails(string uid, int tid)
         {
             var tmaster = await context.TimeSheetMaster.Where(t =>
@@ -109,7 +128,7 @@ namespace MVC_TimeSh.Controllers
             var userTimeDetails = (from t in context.TimeSheetMaster
                                    join d in context.TimeSheetDetails
                                    on t.TimeSheetMasterId equals d.TimeSheetMasterId
-                                   where t.UserId == uid
+                                   where t.UserId == uid && d.TimeSheetMasterId == tid
                                    select new TimeSheetDetailsModel()
                                    {
                                        TimeSheetMasterId = t.TimeSheetMasterId,
@@ -132,47 +151,100 @@ namespace MVC_TimeSh.Controllers
             return View(await userTimeDetails.FirstOrDefaultAsync());
         }
         //GET: /TimeSheet/UserEditTimeSheet/{uid}{mid}{did}
-        public async Task<ActionResult> UserEditTimeSheet(string uid, int did)
+        [Authorize]
+        public async Task<ActionResult> UserEditTimeSheet(string uid,int mid)
         {
-            //var tmaster = await context.TimeSheetMaster.Where(t =>
-            //              t.TimeSheetMasterId == mid).FirstOrDefaultAsync();
-            //var tdetail = await context.TimeSheetDetails.Where(t =>
-            //              t.TimeSheetMasterId == tmaster.TimeSheetMasterId).FirstOrDefaultAsync();
-            //var project = await context.Projects.Where(p =>
-            //              p.ProjectId == tdetail.ProjectId).FirstOrDefaultAsync();
+            ViewBag.ProjectsSelect = new SelectList(
+                context.Projects.ToList(), "ProjectId", "ProjectName");
 
-            var td = await context.TimeSheetDetails.Where(t => 
-                           t.TimeSheetId == did).FirstOrDefaultAsync();
-            var proj = await context.Projects.Where(p => 
-                             p.ProjectId == td.ProjectId).FirstOrDefaultAsync();
-
+            var tmaster = await context.TimeSheetMaster.Where(m => m.TimeSheetMasterId
+                          == mid && m.UserId == uid).FirstOrDefaultAsync();
+            var tdetail = await context.TimeSheetDetails.Where(d => d.TimeSheetMasterId 
+                          == tmaster.TimeSheetMasterId).FirstOrDefaultAsync();
+            var tproj = await context.Projects.Where(p => p.ProjectId 
+                        == tdetail.ProjectId).FirstOrDefaultAsync();
             var timeSheet = (from t in context.TimeSheetMaster
                              join d in context.TimeSheetDetails
                              on t.TimeSheetMasterId equals d.TimeSheetMasterId
-                             where d.TimeSheetId == did
-                             select new TimeSheetDetailsModel()
+                             where d.TimeSheetMasterId == mid
+                             && d.TimeSheetId == tdetail.TimeSheetId
+                             select new TimeSheetProjectsModel()
                              {
-                                 TimeSheetMasterId = t.TimeSheetMasterId,
-                                 Sunday = d.Sunday,
-                                 Monday = d.Monday,
-                                 Tuesday = d.Tuesday,
-                                 Wednesday = d.Wednesday,
-                                 Thursday = d.Thursday,
-                                 Friday = d.Friday,
-                                 Saturday = d.Saturday,
-                                 Hours = t.TotalHours,
-                                 ProjectName = proj.ProjectName,
-                                 ProjectId = proj.ProjectId,
+                                 TimeMasterId = t.TimeSheetMasterId,
+                                 TimeDetailsId = d.TimeSheetId,
+                                 P1w1d1 = d.Sunday,
+                                 P1w1d2 = d.Monday,
+                                 P1w1d3 = d.Tuesday,
+                                 P1w1d4 = d.Wednesday,
+                                 P1w1d5 = d.Thursday,
+                                 P1w1d6 = d.Friday,
+                                 P1w1d7 = d.Saturday,
+                                 ProjTotal1 = (int)t.TotalHours,
+                                 DaysOfWeek1 = tproj.ProjectName,
+                                 ProjectId1 = tproj.ProjectId,
                                  UserId = t.UserId,
-                                 Comment = t.Comment
+                                 ProjDesc1 = t.Comment,
+                                 Proj1 = (DateTime)t.FromDate,
+                                 Proj7 = (DateTime)t.DateCreated,
+                                 IdShortened = t.UserId.Substring(0,10),
                              });
             if (timeSheet == null)
                 return HttpNotFound();
 
             return View(await timeSheet.FirstOrDefaultAsync());
         }
+        // POST: /TimeSheet/UserEditTimeSheet/{timesheetprojectsmodel}
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> UserEditTimeSheet(TimeSheetProjectsModel model)
+        {
+            try
+            {
+                if(model == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                if (ModelState.IsValid)
+                {
+                    var master = await context.TimeSheetMaster.Where(t => 
+                        t.TimeSheetMasterId == model.TimeMasterId).FirstOrDefaultAsync();
+                    master.DateCreated = model.Proj7;
+                    master.FromDate = model.Proj1;
+                    master.ToDate = model.Proj1.AddDays(7);
+                    master.TotalHours = model.ProjTotal1;
+                    master.Comment = model.ProjDesc1;
+                    var details = await context.TimeSheetDetails.Where(t =>
+                        t.TimeSheetMasterId == model.TimeMasterId && 
+                        t.TimeSheetId == model.TimeDetailsId).FirstOrDefaultAsync();
+                    details.ProjectId = model.ProjectId1;
+                    details.Sunday = model.P1w1d1;
+                    details.Monday = model.P1w1d2;
+                    details.Tuesday = model.P1w1d3;
+                    details.Wednesday = model.P1w1d4;
+                    details.Thursday = model.P1w1d5;
+                    details.Friday = model.P1w1d6;
+                    details.Saturday = model.P1w1d7;
+                    details.Hours = model.ProjTotal1;
+
+                    context.Entry(master).State = EntityState.Modified;
+                    context.Entry(details).State = EntityState.Modified;
+                    await context.SaveChangesAsync();
+                    TempData["Success"] = "TimeSheet Edit Successful";
+                    return RedirectToAction("UserTimeSheets", new { id = model.UserId });
+                }
+                TempData["Error"] = "TimeSheet Edit Failure";
+                return RedirectToAction("UserTimeSheets", new { id = model.UserId });
+            }
+            catch (Exception ex)
+            {
+                Console.Write(ex.Message);
+                TempData["Error"] = "TimeSheet Edit Failure";
+                return RedirectToAction("UserTimeSheets", new { id = model.UserId });
+            }
+        }
 
         // GET: /TimeSheet/AddTimeSheet
+        [Authorize]
         public ActionResult AddTimeSheet()
         {
             ViewBag.ProjectsSelect = new SelectList(
@@ -358,7 +430,9 @@ namespace MVC_TimeSh.Controllers
 
             return View(details);
         }
+
         // POST: TimeSheet/DeleteTimeSheet{masterId}
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteTimeSheet(int masterId)
@@ -398,6 +472,7 @@ namespace MVC_TimeSh.Controllers
                 return RedirectToAction("TimeSheetList");
             }
         }
+        [Authorize]
         [HttpPost, ActionName("DeleteTimeSh")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteTimeData(int mid, int did)
@@ -446,6 +521,230 @@ namespace MVC_TimeSh.Controllers
                 TempData["Error"] = "TimeSheet Delete was Unsuccessful";
                 return RedirectToAction("UserTimeDetails");
             }
+        }
+
+        //GET: /TimeSheet/AdminTimeMenu/
+        [Authorize(Roles = "Admin, SuperAdmin")]
+        public async Task<ActionResult> AdminTimeMenu()
+        {
+            var userTimeSheets = (from times in context.TimeSheetMaster                                  
+                                  select new TimeSheetMasterModel()
+                                  {
+                                      TimeSheetMasterId = times.TimeSheetMasterId,
+                                      FromDate = ((DateTime)times.FromDate),
+                                      ToDate = ((DateTime)times.ToDate),
+                                      TimeSheetStatus = times.TimeSheetStatus,
+                                      TotalHours = times.TotalHours,
+                                      Comment = times.Comment,
+                                      DateCreated = ((DateTime)times.DateCreated),
+                                      UserId = times.UserId.ToString(),
+                                      IdShortened = times.UserId.Substring(0, 8)                                      
+                                  });
+            if (userTimeSheets == null)
+                return HttpNotFound();
+            TempData["PanelHeader"] = "All Submitted TimeSheets";
+            return View(await userTimeSheets.ToListAsync());
+        }
+        // GET: TimeSheet/AdminApproval{masterid}
+        [Authorize(Roles = "Admin, SuperAdmin")]
+        public ActionResult AdminApproval(int masterId)
+        {
+            var masterModel = context.TimeSheetMaster.Where(w =>
+                              w.TimeSheetMasterId.Equals(masterId)).FirstOrDefault();
+            var detailM = context.TimeSheetDetails.Where(t => t.TimeSheetMasterId.Equals(
+                              masterModel.TimeSheetMasterId)).FirstOrDefault();
+            var project = context.Projects.Where(p => p.ProjectId == 
+                              detailM.ProjectId).FirstOrDefault();
+
+            var details = (from master in context.TimeSheetMaster
+                           join detail in context.TimeSheetDetails
+                           on master.TimeSheetMasterId equals detail.TimeSheetMasterId
+                           where master.TimeSheetMasterId == masterId
+                           select new TimeSheetDetailsModel()
+                           {
+                               TimeSheetMasterId = masterId,
+                               TimeSheetId = detail.TimeSheetId,
+                               Sunday = detail.Sunday,
+                               Monday = detail.Monday,
+                               Tuesday = detail.Tuesday,
+                               Wednesday = detail.Wednesday,
+                               Thursday = detail.Thursday,
+                               Friday = detail.Friday,
+                               Saturday = detail.Saturday,
+                               Hours = detail.Hours,
+                               Comment = master.Comment,
+                               ProjectId = (int)detail.ProjectId,
+                               ProjectName = project.ProjectName,
+                               DateCreated = (DateTime)master.DateCreated,
+                               UserId = master.UserId
+                           }).FirstOrDefault();
+            return View(details);
+        }
+
+        /*[HttpPost]
+        public ActionResult AdminApproval(TimeSheetDetailsModel model)
+        {
+            var master =  context.TimeSheetMaster.Where(m => m.TimeSheetMasterId ==
+                          model.TimeSheetMasterId).FirstOrDefaultAsync();
+            return RedirectToAction("AdminTimeMenu");
+        }*/
+
+        //POST: TimeSheet/ApproveTimeSheet{model}
+        [HttpPost]
+        [Authorize(Roles = "Admin, SuperAdmin")]
+        public async Task<ActionResult> ApproveTimeSheet(TimeSheetDetailsModel model)
+        {
+            var masterMod = await context.TimeSheetMaster.Where(m =>
+                    m.TimeSheetMasterId == model.TimeSheetMasterId).FirstOrDefaultAsync();
+            masterMod.TimeSheetMasterId = model.TimeSheetMasterId;
+            masterMod.Comment = model.Comment;
+            masterMod.TimeSheetStatus = 2;            
+            try
+            {
+                context.Entry(masterMod).State = EntityState.Modified;
+                await context.SaveChangesAsync();
+                TempData["Success"] = "TimeSheet Approved";
+                return RedirectToAction("AdminTimeMenu");
+            }
+            catch(Exception ex)
+            {
+                TempData["Error"] = "TimeSheet Approval Error";
+                return RedirectToAction("AdminTimeMenu");
+            }
+        }
+        //POST: TimeSheet/RejectTimeSheet{model}
+        [HttpPost]
+        [Authorize(Roles = "Admin, SuperAdmin")]
+        public async Task<ActionResult> RejectTimeSheet(TimeSheetDetailsModel model)
+        {
+            var masterMod = await context.TimeSheetMaster.Where(m =>
+                    m.TimeSheetMasterId == model.TimeSheetMasterId).FirstOrDefaultAsync();
+            masterMod.TimeSheetMasterId = model.TimeSheetMasterId;
+            masterMod.Comment = model.Comment;
+            masterMod.TimeSheetStatus = 0;
+            try
+            {
+                context.Entry(masterMod).State = EntityState.Modified;
+                await context.SaveChangesAsync();
+                TempData["Error"] = "TimeSheet Rejected Approval";
+                return RedirectToAction("AdminTimeMenu");
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = "TimeSheet Rejected Error";
+                return RedirectToAction("AdminTimeMenu");
+            }
+        }
+        //GET: /TimeSheet/AdminApproveTimes/
+        [Authorize(Roles = "Admin, SuperAdmin")]
+        public async Task<ActionResult> AdminApproveTimes()
+        {
+            var approvals = await (from master in context.TimeSheetMaster
+                             where master.TimeSheetStatus == 2
+                             select new TimeSheetMasterModel()
+                             {
+                                 TimeSheetMasterId = master.TimeSheetMasterId,
+                                 TimeSheetStatus = master.TimeSheetStatus,
+                                 ToDate = (DateTime)master.ToDate,
+                                 FromDate = (DateTime)master.FromDate,
+                                 DateCreated = (DateTime)master.DateCreated,
+                                 UserId = master.UserId,
+                                 IdShortened = master.UserId.Substring(0, 8),
+                                 TotalHours = master.TotalHours,
+                                 Comment = master.Comment,
+                             }).ToListAsync();
+            if(approvals == null)
+            { 
+                return HttpNotFound();
+            }
+            TempData["PanelHeader"] = "All Approved TimeSheets";
+            return View("AdminTimeMenu", approvals);
+        }
+        //GET: /TimeSheet/AdminRejectTimes/
+        [Authorize(Roles = "Admin, SuperAdmin")]
+        public async Task<ActionResult> AdminRejectTimes()
+        {
+            var rejects = await (from master in context.TimeSheetMaster
+                                   where master.TimeSheetStatus == 0
+                                   select new TimeSheetMasterModel()
+                                   {
+                                       TimeSheetMasterId = master.TimeSheetMasterId,
+                                       TimeSheetStatus = master.TimeSheetStatus,
+                                       ToDate = (DateTime)master.ToDate,
+                                       FromDate = (DateTime)master.FromDate,
+                                       DateCreated = (DateTime)master.DateCreated,
+                                       UserId = master.UserId,
+                                       IdShortened = master.UserId.Substring(0, 8),
+                                       TotalHours = master.TotalHours,
+                                       Comment = master.Comment,
+                                   }).ToListAsync();
+            if (rejects == null)
+            {
+                return HttpNotFound();
+            }
+            TempData["PanelHeader"] = "All Rejected TimeSheets";
+            return View("AdminTimeMenu", rejects);
+        }
+        //GET: /TimeSheet/UserApproveTimes/{userid}
+        [Authorize]
+        //public async Task<ActionResult> UserApproveTimes(string userid, int? page)
+        public async Task<ActionResult> UserApproveTimes(string userid)
+        {
+            var approved = await (from m in context.TimeSheetMaster
+                                  where m.TimeSheetStatus == 2
+                                  && m.UserId == userid
+                                  select new TimeSheetMasterModel()
+                                  {
+                                      TimeSheetMasterId = m.TimeSheetMasterId,
+                                      TimeSheetStatus = m.TimeSheetStatus,
+                                      ToDate = (DateTime)m.ToDate,
+                                      FromDate = (DateTime)m.FromDate,
+                                      DateCreated = (DateTime)m.DateCreated,
+                                      UserId = m.UserId,
+                                      IdShortened = m.UserId.Substring(0,8),
+                                      TotalHours = m.TotalHours,
+                                      Comment = m.Comment,
+                                  }).ToListAsync();
+            if(approved == null)
+                return HttpNotFound();
+
+            //int pageSize = 3;
+            //int pageNumber = (page ?? 1);
+            TempData["PanelHeader"] = "Your Approved TimeSheets";
+            //TempData["methodCall"] = 1;
+            //return View("UserTimeSheets", approved.ToPagedList(pageNumber, pageSize));
+            return View("UserTimeSheets", approved);
+        }
+        /* public async Task<ActionResult> UserTimeSheets(string id, int? page)
+                                  }).ToListAsync();
+            int pageSize = 3;
+            int pageNumber = (page ?? 1);
+            return View(userTimeSheets.ToPagedList(pageNumber, pageSize));
+         */ 
+        //GET: /TimeSheet/UserRejectTimes/{userid}
+        [Authorize]
+        public async Task<ActionResult> UserRejectTimes(string userid)
+        {
+            var rejected = await (from m in context.TimeSheetMaster
+                                  where m.TimeSheetStatus == 0
+                                  && m.UserId == userid
+                                  select new TimeSheetMasterModel()
+                                  {
+                                      TimeSheetMasterId = m.TimeSheetMasterId,
+                                      TimeSheetStatus = m.TimeSheetStatus,
+                                      ToDate = (DateTime)m.ToDate,
+                                      FromDate = (DateTime)m.FromDate,
+                                      DateCreated = (DateTime)m.DateCreated,
+                                      UserId = m.UserId,
+                                      IdShortened = m.UserId.Substring(0, 8),
+                                      TotalHours = m.TotalHours,
+                                      Comment = m.Comment,
+                                  }).ToListAsync();
+            if (rejected == null)
+                return HttpNotFound();
+            
+            TempData["PanelHeader"] = "Your Rejected TimeSheets";
+            return View("UserTimeSheets", rejected);
         }
 
 
